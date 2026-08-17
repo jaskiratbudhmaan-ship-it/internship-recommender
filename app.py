@@ -25,12 +25,23 @@ CORS(app)
 
 
 # ==========================================
-# HELPER FUNCTION
+# SAFE TEXT FUNCTION
 # ==========================================
 
 def safe_text(value):
-    if pd.isna(value):
+
+    if value is None:
         return ""
+
+    if isinstance(value, (list, tuple)):
+        return " ".join(str(x) for x in value).lower()
+
+    try:
+        if pd.isna(value):
+            return ""
+    except:
+        pass
+
     return str(value).strip().lower()
 
 
@@ -47,228 +58,89 @@ def get_recommendations_from_user(
 
     df = merged_df.copy()
 
+    # Safely convert inputs
     skills = [
-        str(x).strip().lower()
+        safe_text(x)
         for x in skills
-        if str(x).strip()
+        if safe_text(x)
     ]
 
     field = safe_text(field)
     location = safe_text(location)
     education = safe_text(education)
 
-
-    # ==========================================
-    # CREATE SEARCH TEXT
-    # ==========================================
-
-    def get_row_text(row, possible_columns):
-
-        values = []
-
-        for column in possible_columns:
-
-            if column in row.index:
-
-                value = row[column]
-
-                if not pd.isna(value):
-
-                    values.append(
-                        str(value).lower()
-                    )
-
-        return " ".join(values)
-
-
-    # ==========================================
-    # HARD FILTER LOCATION
-    # ==========================================
-
-    if location:
-
-        location_mask = df.apply(
-            lambda row:
-            location in get_row_text(
-                row,
-                [
-                    "Location",
-                    "location"
-                ]
-            ),
-            axis=1
-        )
-
-        filtered_df = df[location_mask].copy()
-
-    else:
-
-        filtered_df = df.copy()
-
-
-    # ==========================================
-    # HARD FILTER FIELD
-    # ==========================================
-
-    if field:
-
-        field_mask = filtered_df.apply(
-            lambda row:
-            any(
-                word in get_row_text(
-                    row,
-                    [
-                        "field",
-                        "Field",
-                        "profile",
-                        "title",
-                        "Skills",
-                        "skills"
-                    ]
-                )
-                for word in field.split()
-                if len(word) > 2
-            ),
-            axis=1
-        )
-
-        field_filtered_df = filtered_df[field_mask].copy()
-
-        # Agar field filter se kuch nahi mila,
-        # location wale results ko completely remove
-        # nahi karenge.
-        if len(field_filtered_df) > 0:
-
-            filtered_df = field_filtered_df
-
-
-    # ==========================================
-    # IF FILTERS RETURN NOTHING
-    # ==========================================
-
-    if len(filtered_df) == 0:
-
-        return pd.DataFrame()
-
-
-    # ==========================================
-    # CALCULATE SCORE
-    # ==========================================
-
     results = []
 
-
-    for _, row in filtered_df.iterrows():
+    for _, row in df.iterrows():
 
         score = 0
 
+        internship_skills = safe_text(
+            row.get("Skills", "")
+        )
 
-        internship_skills = get_row_text(
-            row,
-            [
-                "Skills",
-                "skills"
-            ]
+        internship_profile = safe_text(
+            row.get("profile", "")
+        )
+
+        internship_location = safe_text(
+            row.get("Location", "")
+        )
+
+        internship_education = safe_text(
+            row.get("Education", "")
         )
 
 
-        internship_profile = get_row_text(
-            row,
-            [
-                "profile",
-                "title"
-            ]
-        )
-
-
-        internship_location = get_row_text(
-            row,
-            [
-                "Location",
-                "location"
-            ]
-        )
-
-
-        internship_field = get_row_text(
-            row,
-            [
-                "field",
-                "Field"
-            ]
-        )
-
-
-        internship_education = get_row_text(
-            row,
-            [
-                "Education",
-                "education"
-            ]
-        )
-
-
-        # ==========================================
-        # SKILLS SCORE
-        # ==========================================
+        # ==================================
+        # SKILLS
+        # ==================================
 
         for skill in skills:
 
-            if skill in internship_skills:
-
+            if skill and skill in internship_skills:
                 score += 15
 
 
-        # ==========================================
-        # FIELD SCORE
-        # ==========================================
+        # ==================================
+        # FIELD
+        # ==================================
 
         if field:
 
-            field_words = [
-                word
-                for word in field.split()
-                if len(word) > 2
-            ]
+            field_words = field.split()
 
             for word in field_words:
 
-                if (
-                    word in internship_profile
-                    or
-                    word in internship_skills
-                    or
-                    word in internship_field
-                ):
+                if len(word) > 2:
 
-                    score += 20
+                    if (
+                        word in internship_profile
+                        or word in internship_skills
+                    ):
+                        score += 20
+                        break
 
 
-        # ==========================================
-        # LOCATION SCORE
-        # ==========================================
+        # ==================================
+        # LOCATION
+        # ==================================
 
         if location:
 
             if location in internship_location:
-
                 score += 15
 
 
-        # ==========================================
-        # EDUCATION SCORE
-        # ==========================================
+        # ==================================
+        # EDUCATION
+        # ==================================
 
         if education:
 
             if education in internship_education:
-
                 score += 10
 
-
-        # ==========================================
-        # SAVE RESULT
-        # ==========================================
 
         item = row.to_dict()
 
@@ -277,33 +149,18 @@ def get_recommendations_from_user(
         results.append(item)
 
 
-    # ==========================================
-    # CREATE RESULT DATAFRAME
-    # ==========================================
+    # ==================================
+    # SORT RESULTS
+    # ==================================
 
     result_df = pd.DataFrame(results)
-
-
-    if result_df.empty:
-
-        return result_df
-
-
-    # ==========================================
-    # SORT BY SCORE
-    # ==========================================
 
     result_df = result_df.sort_values(
         by="score",
         ascending=False
     )
 
-
-    # ==========================================
-    # RETURN MORE THAN 5 RESULTS
-    # ==========================================
-
-    return result_df.head(100)
+    return result_df.head(5)
 
 
 # ==========================================
@@ -320,71 +177,49 @@ def get_recommendation_reasons(
 
     reasons = []
 
-
     skills = [
-        str(x).strip().lower()
+        safe_text(x)
         for x in skills
-        if str(x).strip()
+        if safe_text(x)
     ]
-
 
     interest = safe_text(interest)
     location = safe_text(location)
     education = safe_text(education)
 
+    internship_skills = safe_text(
+        row.get("Skills", "")
+    )
 
-    internship_skills = get_row_text_for_reason(
-        row,
-        [
-            "Skills",
-            "skills"
-        ]
+    profile = safe_text(
+        row.get("profile", "")
+    )
+
+    internship_location = safe_text(
+        row.get("Location", "")
+    )
+
+    internship_education = safe_text(
+        row.get("Education", "")
     )
 
 
-    profile = get_row_text_for_reason(
-        row,
-        [
-            "profile",
-            "title"
-        ]
-    )
-
-
-    internship_location = get_row_text_for_reason(
-        row,
-        [
-            "Location",
-            "location"
-        ]
-    )
-
-
-    internship_education = get_row_text_for_reason(
-        row,
-        [
-            "Education",
-            "education"
-        ]
-    )
-
-
-    # ==========================================
+    # ==================================
     # SKILLS
-    # ==========================================
+    # ==================================
 
     for skill in skills:
 
-        if skill in internship_skills:
+        if skill and skill in internship_skills:
 
             reasons.append(
                 f"{skill.title()} matches your skills"
             )
 
 
-    # ==========================================
+    # ==================================
     # INTEREST / FIELD
-    # ==========================================
+    # ==================================
 
     if interest:
 
@@ -394,8 +229,7 @@ def get_recommendation_reasons(
 
                 if (
                     word in profile
-                    or
-                    word in internship_skills
+                    or word in internship_skills
                 ):
 
                     reasons.append(
@@ -405,9 +239,9 @@ def get_recommendation_reasons(
                     break
 
 
-    # ==========================================
+    # ==================================
     # LOCATION
-    # ==========================================
+    # ==================================
 
     if location:
 
@@ -418,9 +252,9 @@ def get_recommendation_reasons(
             )
 
 
-    # ==========================================
+    # ==================================
     # EDUCATION
-    # ==========================================
+    # ==================================
 
     if education:
 
@@ -431,9 +265,9 @@ def get_recommendation_reasons(
             )
 
 
-    # ==========================================
+    # ==================================
     # DEFAULT REASON
-    # ==========================================
+    # ==================================
 
     if len(reasons) == 0:
 
@@ -443,32 +277,6 @@ def get_recommendation_reasons(
 
 
     return reasons
-
-
-# ==========================================
-# HELPER FOR REASONS
-# ==========================================
-
-def get_row_text_for_reason(
-    row,
-    possible_columns
-):
-
-    values = []
-
-    for column in possible_columns:
-
-        if column in row.index:
-
-            value = row[column]
-
-            if not pd.isna(value):
-
-                values.append(
-                    str(value).lower()
-                )
-
-    return " ".join(values)
 
 
 # ==========================================
@@ -482,80 +290,46 @@ def recommend():
 
         data = request.get_json()
 
-        if not data:
+        if not isinstance(data, dict):
+            return jsonify({
+                "error": "Invalid JSON data"
+            }), 400
 
-            data = {}
 
-
-        # ==========================================
-        # GET USER DATA
-        # ==========================================
-
-        skills_text = data.get(
-            "skills",
-            ""
+        skills_text = safe_text(
+            data.get("skills", "")
         )
 
-        field = data.get(
-            "field",
-            ""
+        field = safe_text(
+            data.get("field", "")
         )
 
-        location = data.get(
-            "location",
-            ""
+        location = safe_text(
+            data.get("location", "")
         )
 
-        education = data.get(
-            "education",
-            ""
-        )
-
-        interests = data.get(
-            "interests",
-            ""
+        education = safe_text(
+            data.get("education", "")
         )
 
 
-        # ==========================================
-        # CONVERT SKILLS
-        # ==========================================
+        # Convert skills string into list
 
-        if isinstance(
-            skills_text,
-            list
-        ):
-
-            skills = skills_text
-
-        else:
-
-            skills = [
-                x.strip()
-                for x in str(
-                    skills_text
-                ).split(",")
-                if x.strip()
-            ]
+        skills = [
+            x.strip()
+            for x in skills_text.split(",")
+            if x.strip()
+        ]
 
 
-        # ==========================================
-        # LOG REQUEST
-        # ==========================================
-
-        print("\n==========================================")
-        print("NEW RECOMMENDATION REQUEST")
+        print("==========================================")
+        print("RECOMMENDATION REQUEST")
         print("Skills:", skills)
         print("Field:", field)
         print("Location:", location)
         print("Education:", education)
-        print("Interests:", interests)
         print("==========================================")
 
-
-        # ==========================================
-        # GET RECOMMENDATIONS
-        # ==========================================
 
         recommendations = get_recommendations_from_user(
             skills,
@@ -565,21 +339,6 @@ def recommend():
         )
 
 
-        # ==========================================
-        # NO RESULTS
-        # ==========================================
-
-        if recommendations.empty:
-
-            print("No matching internships found.")
-
-            return jsonify([])
-
-
-        # ==========================================
-        # BUILD RESPONSE
-        # ==========================================
-
         results = []
 
 
@@ -588,54 +347,36 @@ def recommend():
             reasons = get_recommendation_reasons(
                 row,
                 skills,
-                interests or field,
+                field,
                 location,
                 education
             )
-
 
             item = row.to_dict()
 
             item["reasons"] = reasons
 
-
-            # Convert NaN to None
-            # so JSON does not break
-
-            for key, value in item.items():
-
-                if pd.isna(value):
-
-                    item[key] = None
-
-
             results.append(item)
-
-
-        print(
-            "Returning",
-            len(results),
-            "internships"
-        )
 
 
         return jsonify(results)
 
 
-    except Exception as error:
+    except Exception as e:
 
-        print(
-            "ERROR:",
-            str(error)
-        )
+        print("==========================================")
+        print("ERROR:")
+        print(str(e))
+        print("==========================================")
+
 
         return jsonify({
-            "error": str(error)
+            "error": str(e)
         }), 500
 
 
 # ==========================================
-# HEALTH CHECK
+# HOME ROUTE
 # ==========================================
 
 @app.route("/", methods=["GET"])
@@ -652,12 +393,6 @@ def home():
 # ==========================================
 
 if __name__ == "__main__":
-
-    print("\n==========================================")
-    print("INTERNMATCH BACKEND STARTING")
-    print("Port: 5001")
-    print("==========================================\n")
-
 
     app.run(
         host="0.0.0.0",
