@@ -75,6 +75,20 @@
             border-radius: 8px;
             background: rgba(123, 150, 105, .12);
         }
+
+        .other-input {
+            display: none;
+            width: 100%;
+            height: 42px;
+            margin-top: 8px;
+            padding: 0 12px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #fafbf8;
+            color: var(--dark);
+            font-size: 12px;
+            outline: none;
+        }
     </style>
 </head>
 
@@ -95,13 +109,10 @@
         </div>
     </div>
 
-
     <header class="navbar">
-
         <div class="container nav-container">
 
             <a href="index.html" class="brand">
-
                 <div class="brand-mark">
                     IM
                 </div>
@@ -110,46 +121,27 @@
                     <strong>InternMatch</strong>
                     <span>AI-powered opportunity discovery</span>
                 </div>
-
             </a>
 
             <nav class="nav-links">
-
-                <a href="index.html">
-                    Home
-                </a>
-
-                <a href="internships.html" class="active">
-                    Internships
-                </a>
-
+                <a href="index.html">Home</a>
+                <a href="internships.html" class="active">Internships</a>
             </nav>
 
             <div class="nav-actions">
-
-                <a href="login.html" class="login-link">
-                    Login
-                </a>
-
-                <a href="profile.html" class="register-btn">
-                    Create Profile
-                </a>
-
+                <a href="login.html" class="login-link">Login</a>
+                <a href="profile.html" class="register-btn">Create Profile</a>
             </div>
 
         </div>
-
     </header>
-
 
     <main>
 
         <section class="internships-page-hero">
-
             <div class="container">
 
                 <div class="internships-page-content">
-
                     <span class="page-eyebrow">
                         AI-POWERED OPPORTUNITY DISCOVERY
                     </span>
@@ -160,245 +152,182 @@
                     </h1>
 
                     <p>
-                        Explore opportunities matched to your
-                        skills, interests and career direction.
-                        Less searching. More relevant opportunities.
+                        Explore opportunities matched to your skills,
+                        interests and career direction. Less searching.
+                        More relevant opportunities.
                     </p>
-
                 </div>
 
                 <div class="matching-status-card">
-
-                    <div class="status-icon">
-                        AI
-                    </div>
+                    <div class="status-icon">AI</div>
 
                     <div>
                         <span>SMART MATCHING</span>
-
-                        <strong>
-                            Personalized for students
-                        </strong>
+                        <strong>Personalized for students</strong>
                     </div>
 
                     <div class="status-pulse"></div>
-
                 </div>
 
             </div>
-
         </section>
 
-
         <section class="internship-search-area">
-
             <div class="container">
 
                 <div class="internship-filter-card">
 
                     <div class="internship-search-box">
-
-                        <label>
-                            Search opportunities
-                        </label>
+                        <label>Skills / Role</label>
 
                         <div class="search-input-wrapper">
-
                             <span>⌕</span>
 
                             <input
-                                id="searchInput"
+                                id="skills"
                                 type="text"
-                                placeholder="Search by role, skill or field"
+                                placeholder="Python, Machine Learning, Web Development"
                             >
-
                         </div>
-
                     </div>
-
 
                     <div class="filter-field">
+                        <label>Field</label>
 
-                        <label>
-                            Field
-                        </label>
-
-                        <select id="fieldFilter">
-
-                            <option value="">
-                                All Fields
-                            </option>
-
-                            <option value="Artificial Intelligence">
-                                Artificial Intelligence
-                            </option>
-
-                            <option value="Data Science">
-                                Data Science
-                            </option>
-
-                            <option value="Software Development">
-                                Software Development
-                            </option>
-
-                            <option value="Public Policy">
-                                Public Policy
-                            </option>
-
-                            <option value="Digital Technology">
-                                Digital Technology
-                            </option>
-
+                        <select id="field" onchange="handleOtherField(this)">
+                            <option value="">All Fields</option>
+                            <option value="Artificial Intelligence">Artificial Intelligence</option>
+                            <option value="Machine Learning">Machine Learning</option>
+                            <option value="Data Science">Data Science</option>
+                            <option value="Software Development">Software Development</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Cyber Security">Cyber Security</option>
+                            <option value="Cloud Computing">Cloud Computing</option>
+                            <option value="UI/UX Design">UI/UX Design</option>
+                            <option value="Digital Marketing">Digital Marketing</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Human Resources">Human Resources</option>
+                            <option value="Other">Other</option>
                         </select>
 
+                        <input
+                            type="text"
+                            id="customField"
+                            class="other-input"
+                            placeholder="Enter your field"
+                        >
                     </div>
-
 
                     <div class="filter-field">
+                        <label>Location</label>
 
-                        <label>
-                            Location
-                        </label>
-
-                        <select id="locationFilter">
-
-                            <option value="">
-                                Any Location
-                            </option>
-
-                            <option value="Remote">
-                                Remote
-                            </option>
-
-                            <option value="New Delhi">
-                                New Delhi
-                            </option>
-
-                            <option value="Delhi">
-                                Delhi
-                            </option>
-
-                            <option value="Bengaluru">
-                                Bengaluru
-                            </option>
-
-                            <option value="Bangalore">
-                                Bangalore
-                            </option>
-
-                            <option value="Mumbai">
-                                Mumbai
-                            </option>
-
-                            <option value="Chennai">
-                                Chennai
-                            </option>
-
-                            <option value="Hyderabad">
-                                Hyderabad
-                            </option>
-
+                        <select id="location" onchange="handleOtherLocation(this)">
+                            <option value="">Any Location</option>
+                            <option value="Remote">Remote</option>
+                            <option value="Work From Home">Work From Home</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="New Delhi">New Delhi</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Bangalore">Bangalore</option>
+                            <option value="Bengaluru">Bengaluru</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Chennai">Chennai</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Noida">Noida</option>
+                            <option value="Gurgaon">Gurgaon</option>
+                            <option value="Other">Other</option>
                         </select>
 
+                        <input
+                            type="text"
+                            id="customLocation"
+                            class="other-input"
+                            placeholder="Enter your preferred location"
+                        >
                     </div>
 
+                    <div class="filter-field">
+                        <label>Education</label>
+
+                        <select id="education" onchange="handleOtherEducation(this)">
+                            <option value="">Any Education</option>
+                            <option value="BSc">BSc</option>
+                            <option value="BTech">BTech</option>
+                            <option value="BE">BE</option>
+                            <option value="BCA">BCA</option>
+                            <option value="MSc">MSc</option>
+                            <option value="MTech">MTech</option>
+                            <option value="MCA">MCA</option>
+                            <option value="Any Degree">Any Degree</option>
+                            <option value="Other">Other</option>
+                        </select>
+
+                        <input
+                            type="text"
+                            id="customEducation"
+                            class="other-input"
+                            placeholder="Enter your education"
+                        >
+                    </div>
 
                     <button
                         type="button"
                         class="filter-button"
-                        id="searchButton">
-
+                        onclick="searchInternships()"
+                    >
                         Search
-
                     </button>
 
                 </div>
 
             </div>
-
         </section>
 
-
         <section class="results-section">
-
             <div class="container">
 
                 <div class="results-header">
-
                     <div>
-
-                        <span>
-                            AVAILABLE OPPORTUNITIES
-                        </span>
-
-                        <h2>
-                            Recommended internships
-                        </h2>
-
+                        <span>AVAILABLE OPPORTUNITIES</span>
+                        <h2>Recommended internships</h2>
                     </div>
 
-                    <div
-                        class="results-count"
-                        id="resultsCount">
-
+                    <div class="results-count" id="resultsCount">
                         Loading...
-
                     </div>
-
                 </div>
 
-
-                <div
-                    class="internships-page-grid"
-                    id="internshipGrid">
-
-                    <div
-                        class="api-message"
-                        id="loadingMessage">
-
+                <div class="internships-page-grid" id="internshipGrid">
+                    <div class="api-message" id="loadingMessage">
                         <div class="loading-spinner"></div>
 
-                        <h3>
-                            Finding internships for you...
-                        </h3>
+                        <h3>Finding internships for you...</h3>
 
                         <p>
                             Our AI recommendation engine is searching
                             for suitable opportunities.
                         </p>
-
                     </div>
-
                 </div>
 
-
                 <div class="load-more-wrapper">
-
                     <button
                         type="button"
                         class="load-more-btn"
-                        id="loadMoreBtn">
-
+                        id="loadMoreBtn"
+                    >
                         Load More Opportunities
-
                     </button>
-
                 </div>
 
             </div>
-
         </section>
 
-
         <section class="internship-ai-cta">
-
             <div class="container">
 
                 <div class="internship-ai-content">
-
-                    <span>
-                        NOT SURE WHERE TO START?
-                    </span>
+                    <span>NOT SURE WHERE TO START?</span>
 
                     <h2>
                         Let AI find opportunities
@@ -406,160 +335,81 @@
                     </h2>
 
                     <p>
-                        Create your student profile and get
-                        personalized internship recommendations
-                        based on your skills, interests and goals.
+                        Create your student profile and get personalized
+                        internship recommendations based on your skills,
+                        interests and goals.
                     </p>
 
-                    <a
-                        href="profile.html"
-                        class="primary-btn">
-
+                    <a href="profile.html" class="primary-btn">
                         Create Your Profile
                         <span>→</span>
-
                     </a>
-
                 </div>
 
-
                 <div class="internship-ai-visual">
-
                     <div class="mini-ai-ring"></div>
 
                     <div class="mini-ai-core">
-
-                        <span>
-                            AI MATCH
-                        </span>
-
-                        <strong>
-                            AI
-                        </strong>
-
+                        <span>AI MATCH</span>
+                        <strong>AI</strong>
                     </div>
-
                 </div>
 
             </div>
-
         </section>
 
     </main>
 
-
     <footer class="footer">
-
         <div class="container footer-grid">
 
             <div class="footer-brand">
+                <div class="brand-mark">IM</div>
 
-                <div class="brand-mark">
-                    IM
-                </div>
-
-                <strong>
-                    InternMatch
-                </strong>
+                <strong>InternMatch</strong>
 
                 <p>
                     AI-powered internship discovery
                     built for India's students.
                 </p>
-
             </div>
 
-
             <div class="footer-column">
-
-                <h4>
-                    Platform
-                </h4>
-
-                <a href="index.html">
-                    Home
-                </a>
-
-                <a href="internships.html">
-                    Internships
-                </a>
-
-                <a href="profile.html">
-                    Create Profile
-                </a>
-
-                <a href="login.html">
-                    Login
-                </a>
-
+                <h4>Platform</h4>
+                <a href="index.html">Home</a>
+                <a href="internships.html">Internships</a>
+                <a href="profile.html">Create Profile</a>
+                <a href="login.html">Login</a>
             </div>
 
-
             <div class="footer-column">
-
-                <h4>
-                    Company
-                </h4>
-
-                <a href="about.html">
-                    About
-                </a>
-
-                <a href="internship-details.html">
-                    Opportunity Details
-                </a>
-
+                <h4>Company</h4>
+                <a href="about.html">About</a>
+                <a href="internship-details.html">Opportunity Details</a>
             </div>
 
-
             <div class="footer-column">
-
-                <h4>
-                    InternMatch
-                </h4>
-
-                <a href="profile.html">
-                    Get Started
-                </a>
-
-                <a href="login.html">
-                    Student Login
-                </a>
-
-                <a href="about.html">
-                    Our Mission
-                </a>
-
+                <h4>InternMatch</h4>
+                <a href="profile.html">Get Started</a>
+                <a href="login.html">Student Login</a>
+                <a href="about.html">Our Mission</a>
             </div>
 
         </div>
-
 
         <div class="container footer-bottom">
-
-            <span>
-                © 2026 InternMatch
-            </span>
-
-            <span>
-                Built for India's students
-            </span>
-
+            <span>© 2026 InternMatch</span>
+            <span>Built for India's students</span>
         </div>
-
     </footer>
 
-
     <script>
-
         const API_URL =
             "https://internship-recommender-egnc.onrender.com/recommend";
-
 
         let allInternships = [];
         let visibleInternships = [];
         let currentLimit = 15;
-
 
         const grid =
             document.getElementById("internshipGrid");
@@ -567,34 +417,17 @@
         const resultsCount =
             document.getElementById("resultsCount");
 
-        const searchInput =
-            document.getElementById("searchInput");
-
-        const fieldFilter =
-            document.getElementById("fieldFilter");
-
-        const locationFilter =
-            document.getElementById("locationFilter");
-
-        const searchButton =
-            document.getElementById("searchButton");
-
         const loadMoreButton =
             document.getElementById("loadMoreBtn");
-
 
         document.addEventListener(
             "DOMContentLoaded",
             function () {
-
                 loadInternships();
-
             }
         );
 
-
         async function loadInternships() {
-
             showLoading();
 
             const savedProfile =
@@ -603,53 +436,25 @@
             let profile = {};
 
             if (savedProfile) {
-
                 try {
-
-                    profile =
-                        JSON.parse(savedProfile);
-
+                    profile = JSON.parse(savedProfile);
                 } catch (error) {
-
-                    console.log(
-                        "Profile data could not be read."
-                    );
-
+                    console.log("Profile data could not be read.");
                 }
-
             }
 
-
             const requestData = {
-
-                skills:
-                    profile.skills || "",
-
-                field:
-                    profile.field || "",
-
+                skills: profile.skills || "",
+                field: profile.field || "",
                 location:
                     profile.preferredLocation ||
                     profile.location ||
                     "",
-
-                education:
-                    profile.education || "",
-
-                interests:
-                    profile.interests || ""
-
+                education: profile.education || "",
+                interests: profile.interests || ""
             };
 
-
-            console.log(
-                "Sending profile to backend:",
-                requestData
-            );
-
-
             try {
-
                 const response =
                     await fetch(
                         API_URL,
@@ -662,47 +467,24 @@
                             },
 
                             body:
-                                JSON.stringify(
-                                    requestData
-                                )
+                                JSON.stringify(requestData)
                         }
                     );
 
-
-                console.log(
-                    "Backend status:",
-                    response.status
-                );
-
-
                 if (!response.ok) {
-
                     throw new Error(
                         "Backend returned " +
                         response.status
                     );
-
                 }
 
-
-                const data =
-                    await response.json();
-
-
-                console.log(
-                    "Backend data:",
-                    data
-                );
-
+                const data = await response.json();
 
                 if (!Array.isArray(data)) {
-
                     throw new Error(
                         "Invalid backend response"
                     );
-
                 }
-
 
                 allInternships = data;
                 visibleInternships = [...data];
@@ -710,53 +492,28 @@
 
                 displayInternships();
 
-
             } catch (error) {
-
-                console.error(
-                    "BACKEND ERROR:",
-                    error
-                );
-
+                console.error("BACKEND ERROR:", error);
                 showError();
-
             }
-
         }
 
-
         function displayInternships() {
-
             grid.innerHTML = "";
 
-
-            if (
-                visibleInternships.length === 0
-            ) {
-
+            if (visibleInternships.length === 0) {
                 grid.innerHTML = `
-
                     <div class="api-message">
-
-                        <h3>
-                            No internships found.
-                        </h3>
-
-                        <p>
-                            Try changing your search or filters.
-                        </p>
-
+                        <h3>No internships found.</h3>
+                        <p>Try changing your search or filters.</p>
                     </div>
-
                 `;
 
                 resultsCount.textContent =
                     "0 opportunities";
 
                 return;
-
             }
-
 
             const itemsToShow =
                 visibleInternships.slice(
@@ -764,109 +521,82 @@
                     currentLimit
                 );
 
-
             resultsCount.textContent =
                 visibleInternships.length +
                 " opportunities";
 
-
             itemsToShow.forEach(
                 function (item, index) {
-
                     grid.appendChild(
                         createInternshipCard(
                             item,
                             index
                         )
                     );
-
                 }
             );
-
 
             if (
                 currentLimit >=
                 visibleInternships.length
             ) {
-
-                loadMoreButton.style.display =
-                    "none";
-
+                loadMoreButton.style.display = "none";
             } else {
-
                 loadMoreButton.style.display =
                     "inline-block";
-
             }
-
         }
 
-
-        function createInternshipCard(
-            item,
-            index
-        ) {
-
+        function createInternshipCard(item, index) {
             const card =
                 document.createElement("article");
 
             card.className =
                 "internship-list-card";
 
-
             const title =
                 item.profile ||
                 item.title ||
                 "Internship";
 
-
             const company =
                 item.company ||
                 "Company";
-
 
             const location =
                 item.Location ||
                 item.location ||
                 "Not Available";
 
-
             const duration =
                 item.Duration ||
                 "Not Available";
-
 
             const stipend =
                 item.Stipend ||
                 "Not Available";
 
-
             const score =
                 Number(item.score || 0);
-
 
             const skillsText =
                 item.Skills ||
                 item.skills ||
                 "";
 
-
             const skills =
                 String(skillsText)
                     .split(",")
                     .map(
-                        skill =>
-                            skill.trim()
+                        skill => skill.trim()
                     )
                     .filter(Boolean)
                     .slice(0, 4);
-
 
             const reasons =
                 Array.isArray(item.reasons)
                     ? item.reasons
                     : [];
-
 
             const initials =
                 company
@@ -881,20 +611,11 @@
                     )
                     .join("");
 
-
-            const internshipId =
-                item.internship_id ||
-                index;
-
-
             card.innerHTML = `
-
                 <div class="list-card-top">
 
                     <div class="large-company-logo">
-                        ${escapeHTML(
-                            initials || "IM"
-                        )}
+                        ${escapeHTML(initials || "IM")}
                     </div>
 
                     <span class="match-badge">
@@ -903,136 +624,99 @@
 
                 </div>
 
-
                 <div class="card-category">
-
-                    ${escapeHTML(
-                        getCategory(item)
-                    )}
-
+                    ${escapeHTML(getCategory(item))}
                 </div>
-
 
                 <h3>
                     ${escapeHTML(title)}
                 </h3>
 
-
                 <p class="company-name">
                     ${escapeHTML(company)}
                 </p>
 
-
                 <div class="list-card-meta">
 
                     <span>
-                        📍
-                        ${escapeHTML(location)}
+                        📍 ${escapeHTML(location)}
                     </span>
 
                     <span>
-                        ⏱
-                        ${escapeHTML(duration)}
+                        ⏱ ${escapeHTML(duration)}
                     </span>
 
                     <span>
-                        💰
-                        ${escapeHTML(stipend)}
+                        💰 ${escapeHTML(stipend)}
                     </span>
 
                 </div>
 
-
                 ${
                     skills.length > 0
                     ? `
-
-                    <div class="skill-tags">
-
-                        ${skills.map(
-                            skill => `
-
-                            <span>
-                                ${escapeHTML(skill)}
-                            </span>
-
-                        `
-                        ).join("")}
-
-                    </div>
-
+                        <div class="skill-tags">
+                            ${skills.map(
+                                skill => `
+                                    <span>
+                                        ${escapeHTML(skill)}
+                                    </span>
+                                `
+                            ).join("")}
+                        </div>
                     `
                     : ""
                 }
-
 
                 ${
                     reasons.length > 0
                     ? `
+                        <div class="match-reasons">
 
-                    <div class="match-reasons">
+                            <span class="match-reasons-title">
+                                WHY RECOMMENDED
+                            </span>
 
-                        <span class="match-reasons-title">
-                            WHY RECOMMENDED
-                        </span>
-
-                        <div class="reason-tags">
-
-                            ${reasons.map(
-                                reason => `
-
-                                <span class="reason-tag">
-                                    ✓
-                                    ${escapeHTML(reason)}
-                                </span>
-
-                            `
-                            ).join("")}
+                            <div class="reason-tags">
+                                ${reasons.map(
+                                    reason => `
+                                        <span class="reason-tag">
+                                            ✓ ${escapeHTML(reason)}
+                                        </span>
+                                    `
+                                ).join("")}
+                            </div>
 
                         </div>
-
-                    </div>
-
                     `
                     : ""
                 }
 
-
                 <div class="list-card-bottom">
 
                     <span class="posted">
-
                         ${
                             item["Date Time"]
                                 ? "Posted recently"
                                 : "Available opportunity"
                         }
-
                     </span>
 
-
                 </div>
-
             `;
 
-
             return card;
-
         }
 
-
         function getCategory(item) {
-
             const field =
                 item.field ||
                 item.Field ||
                 "";
 
-
             if (field) {
                 return field;
             }
-
 
             const title =
                 String(
@@ -1041,14 +725,12 @@
                     ""
                 ).toLowerCase();
 
-
             if (
                 title.includes("data") ||
                 title.includes("analyst")
             ) {
                 return "Data Science & Analytics";
             }
-
 
             if (
                 title.includes("ai") ||
@@ -1057,7 +739,6 @@
                 return "Artificial Intelligence";
             }
 
-
             if (
                 title.includes("software") ||
                 title.includes("developer")
@@ -1065,253 +746,130 @@
                 return "Software Development";
             }
 
-
             if (title.includes("web")) {
                 return "Web Development";
             }
-
 
             if (title.includes("cyber")) {
                 return "Cybersecurity";
             }
 
-
             return "Internship Opportunity";
-
         }
 
+        function toggleOtherInput(select, inputId) {
+            const input =
+                document.getElementById(inputId);
 
-        function applyFilters() {
-
-            const search =
-                searchInput.value
-                    .trim()
-                    .toLowerCase();
-
-
-            const selectedField =
-                fieldFilter.value
-                    .trim()
-                    .toLowerCase();
-
-
-            const selectedLocation =
-                locationFilter.value
-                    .trim()
-                    .toLowerCase();
-
-
-            visibleInternships =
-                allInternships.filter(
-                    function (item) {
-
-                        const title =
-                            String(
-                                item.profile ||
-                                item.title ||
-                                ""
-                            ).toLowerCase();
-
-
-                        const company =
-                            String(
-                                item.company ||
-                                ""
-                            ).toLowerCase();
-
-
-                        const skills =
-                            String(
-                                item.Skills ||
-                                item.skills ||
-                                ""
-                            ).toLowerCase();
-
-
-                        const field =
-                            String(
-                                item.field ||
-                                item.Field ||
-                                ""
-                            ).toLowerCase();
-
-
-                        const location =
-                            String(
-                                item.Location ||
-                                item.location ||
-                                ""
-                            ).toLowerCase();
-
-
-                        const matchesSearch =
-                            !search ||
-                            title.includes(search) ||
-                            company.includes(search) ||
-                            skills.includes(search) ||
-                            field.includes(search);
-
-
-                        const matchesField =
-                            !selectedField ||
-                            field.includes(selectedField) ||
-                            title.includes(selectedField);
-
-
-                        const matchesLocation =
-                            !selectedLocation ||
-                            location.includes(selectedLocation);
-
-
-                        return (
-                            matchesSearch &&
-                            matchesField &&
-                            matchesLocation
-                        );
-
-                    }
-                );
-
-
-            currentLimit = 6;
-
-            displayInternships();
-
+            if (select.value === "Other") {
+                input.style.display = "block";
+                input.focus();
+            } else {
+                input.style.display = "none";
+                input.value = "";
+            }
         }
 
+        function handleOtherField(select) {
+            toggleOtherInput(select, "customField");
+        }
 
-        /*
-        =========================================
-        SEARCH → RESULT.HTML
-        =========================================
-        */
+        function handleOtherLocation(select) {
+            toggleOtherInput(select, "customLocation");
+        }
 
-        searchButton.addEventListener(
-            "click",
-            function () {
+        function handleOtherEducation(select) {
+            toggleOtherInput(select, "customEducation");
+        }
 
-                const search =
-                    searchInput.value.trim();
+        function searchInternships() {
+            const skills =
+                document.getElementById("skills")
+                    .value
+                    .trim();
 
-                const field =
-                    fieldFilter.value.trim();
+            let field =
+                document.getElementById("field")
+                    .value;
 
-                const location =
-                    locationFilter.value.trim();
+            let location =
+                document.getElementById("location")
+                    .value;
 
+            let education =
+                document.getElementById("education")
+                    .value;
 
-                const params =
-                    new URLSearchParams();
-
-
-                if (search) {
-                    params.set(
-                        "search",
-                        search
-                    );
-                }
-
-
-                if (field) {
-                    params.set(
-                        "field",
-                        field
-                    );
-                }
-
-
-                if (location) {
-                    params.set(
-                        "location",
-                        location
-                    );
-                }
-
-
-                window.location.href =
-                    "result.html?" +
-                    params.toString();
-
+            if (field === "Other") {
+                field =
+                    document.getElementById("customField")
+                        .value
+                        .trim();
             }
-        );
 
-
-        searchInput.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (event.key === "Enter") {
-
-                    searchButton.click();
-
-                }
-
+            if (location === "Other") {
+                location =
+                    document.getElementById("customLocation")
+                        .value
+                        .trim();
             }
-        );
 
+            if (education === "Other") {
+                education =
+                    document.getElementById("customEducation")
+                        .value
+                        .trim();
+            }
 
-        fieldFilter.addEventListener(
-            "change",
-            applyFilters
-        );
+            const params =
+                new URLSearchParams();
 
+            if (skills) {
+                params.set("skills", skills);
+            }
 
-        locationFilter.addEventListener(
-            "change",
-            applyFilters
-        );
+            if (field) {
+                params.set("field", field);
+            }
 
+            if (location) {
+                params.set("location", location);
+            }
+
+            if (education) {
+                params.set("education", education);
+            }
+
+            window.location.href =
+                "result.html?" +
+                params.toString();
+        }
 
         loadMoreButton.addEventListener(
             "click",
             function () {
-
                 currentLimit += 15;
-
                 displayInternships();
-
             }
         );
 
-
         function showLoading() {
-
             grid.innerHTML = `
-
                 <div class="api-message">
-
                     <div class="loading-spinner"></div>
-
-                    <h3>
-                        Finding internships for you...
-                    </h3>
-
-                    <p>
-                        Connecting to InternMatch AI.
-                    </p>
-
+                    <h3>Finding internships for you...</h3>
+                    <p>Connecting to InternMatch AI.</p>
                 </div>
-
             `;
 
-            resultsCount.textContent =
-                "Loading...";
-
-            loadMoreButton.style.display =
-                "none";
-
+            resultsCount.textContent = "Loading...";
+            loadMoreButton.style.display = "none";
         }
 
-
         function showError() {
-
             grid.innerHTML = `
-
                 <div class="api-message">
-
-                    <h3>
-                        ❌ Something went wrong.
-                    </h3>
+                    <h3>❌ Something went wrong.</h3>
 
                     <p>
                         We couldn't load internships
@@ -1320,27 +878,18 @@
 
                     <button
                         class="retry-btn"
-                        onclick="loadInternships()">
-
+                        onclick="loadInternships()"
+                    >
                         Try Again
-
                     </button>
-
                 </div>
-
             `;
 
-            resultsCount.textContent =
-                "Unable to load";
-
-            loadMoreButton.style.display =
-                "none";
-
+            resultsCount.textContent = "Unable to load";
+            loadMoreButton.style.display = "none";
         }
 
-
         function escapeHTML(value) {
-
             const div =
                 document.createElement("div");
 
@@ -1350,9 +899,7 @@
                     : String(value);
 
             return div.innerHTML;
-
         }
-
     </script>
 
 </body>
