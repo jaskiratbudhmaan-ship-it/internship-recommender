@@ -160,7 +160,7 @@ def get_recommendations_from_user(
         ascending=False
     )
 
-    return result_df.head(5)
+    return result_df.head(15)
 
 
 # ==========================================
