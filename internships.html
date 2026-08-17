@@ -1140,6 +1140,7 @@
                         const field =
                             String(
                                 item.field ||
+                                item.Field ||
                                 ""
                             ).toLowerCase();
 
@@ -1188,9 +1189,59 @@
         }
 
 
+        /*
+        =========================================
+        SEARCH → RESULT.HTML
+        =========================================
+        */
+
         searchButton.addEventListener(
             "click",
-            applyFilters
+            function () {
+
+                const search =
+                    searchInput.value.trim();
+
+                const field =
+                    fieldFilter.value.trim();
+
+                const location =
+                    locationFilter.value.trim();
+
+
+                const params =
+                    new URLSearchParams();
+
+
+                if (search) {
+                    params.set(
+                        "search",
+                        search
+                    );
+                }
+
+
+                if (field) {
+                    params.set(
+                        "field",
+                        field
+                    );
+                }
+
+
+                if (location) {
+                    params.set(
+                        "location",
+                        location
+                    );
+                }
+
+
+                window.location.href =
+                    "result.html?" +
+                    params.toString();
+
+            }
         );
 
 
@@ -1199,7 +1250,9 @@
             function (event) {
 
                 if (event.key === "Enter") {
-                    applyFilters();
+
+                    searchButton.click();
+
                 }
 
             }
