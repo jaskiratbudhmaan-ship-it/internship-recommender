@@ -1,4 +1,3 @@
-
 import pandas as pd
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -10,6 +9,12 @@ from flask_cors import CORS
 
 merged_df = pd.read_csv("merged_internships_dataset.csv")
 
+print("==========================================")
+print("DATASET LOADED")
+print("Rows:", len(merged_df))
+print("Columns:", list(merged_df.columns))
+print("==========================================")
+
 
 # ==========================================
 # FLASK APP
@@ -17,6 +22,27 @@ merged_df = pd.read_csv("merged_internships_dataset.csv")
 
 app = Flask(__name__)
 CORS(app)
+
+
+# ==========================================
+# SAFE TEXT FUNCTION
+# ==========================================
+
+def safe_text(value):
+
+    if value is None:
+        return ""
+
+    if isinstance(value, (list, tuple)):
+        return " ".join(str(x) for x in value).lower()
+
+    try:
+        if pd.isna(value):
+            return ""
+    except:
+        pass
+
+    return str(value).strip().lower()
 
 
 # ==========================================
@@ -32,15 +58,16 @@ def get_recommendations_from_user(
 
     df = merged_df.copy()
 
+    # Safely convert inputs
     skills = [
-        str(x).strip().lower()
+        safe_text(x)
         for x in skills
-        if str(x).strip()
+        if safe_text(x)
     ]
 
-    field = str(field).strip().lower()
-    location = str(location).strip().lower()
-    education = str(education).strip().lower()
+    field = safe_text(field)
+    location = safe_text(location)
+    education = safe_text(education)
 
     results = []
 
@@ -48,34 +75,42 @@ def get_recommendations_from_user(
 
         score = 0
 
-        internship_skills = str(
+        internship_skills = safe_text(
             row.get("Skills", "")
-        ).lower()
+        )
 
-        internship_profile = str(
+        internship_profile = safe_text(
             row.get("profile", "")
-        ).lower()
+        )
 
-        internship_location = str(
+        internship_location = safe_text(
             row.get("Location", "")
-        ).lower()
+        )
 
-        internship_education = str(
+        internship_education = safe_text(
             row.get("Education", "")
-        ).lower()
+        )
 
 
-        # Skills
+        # ==================================
+        # SKILLS
+        # ==================================
+
         for skill in skills:
 
-            if skill in internship_skills:
+            if skill and skill in internship_skills:
                 score += 15
 
 
-        # Field
+        # ==================================
+        # FIELD
+        # ==================================
+
         if field:
 
-            for word in field.split():
+            field_words = field.split()
+
+            for word in field_words:
 
                 if len(word) > 2:
 
@@ -83,19 +118,24 @@ def get_recommendations_from_user(
                         word in internship_profile
                         or word in internship_skills
                     ):
-
                         score += 20
                         break
 
 
-        # Location
+        # ==================================
+        # LOCATION
+        # ==================================
+
         if location:
 
             if location in internship_location:
                 score += 15
 
 
-        # Education
+        # ==================================
+        # EDUCATION
+        # ==================================
+
         if education:
 
             if education in internship_education:
@@ -108,6 +148,10 @@ def get_recommendations_from_user(
 
         results.append(item)
 
+
+    # ==================================
+    # SORT RESULTS
+    # ==================================
 
     result_df = pd.DataFrame(results)
 
@@ -134,60 +178,71 @@ def get_recommendation_reasons(
     reasons = []
 
     skills = [
-        str(x).strip().lower()
+        safe_text(x)
         for x in skills
-        if str(x).strip()
+        if safe_text(x)
     ]
 
-    interest = str(interest).lower().strip()
-    location = str(location).lower().strip()
-    education = str(education).lower().strip()
+    interest = safe_text(interest)
+    location = safe_text(location)
+    education = safe_text(education)
 
-    internship_skills = str(
+    internship_skills = safe_text(
         row.get("Skills", "")
-    ).lower()
+    )
 
-    profile = str(
+    profile = safe_text(
         row.get("profile", "")
-    ).lower()
+    )
 
-    internship_location = str(
+    internship_location = safe_text(
         row.get("Location", "")
-    ).lower()
+    )
 
-    internship_education = str(
+    internship_education = safe_text(
         row.get("Education", "")
-    ).lower()
+    )
 
 
-    # Skills
+    # ==================================
+    # SKILLS
+    # ==================================
+
     for skill in skills:
 
-        if skill in internship_skills:
+        if skill and skill in internship_skills:
 
             reasons.append(
                 f"{skill.title()} matches your skills"
             )
 
 
-    # Interest
-    for word in interest.split():
+    # ==================================
+    # INTEREST / FIELD
+    # ==================================
 
-        if len(word) > 2:
+    if interest:
 
-            if (
-                word in profile
-                or word in internship_skills
-            ):
+        for word in interest.split():
 
-                reasons.append(
-                    f"Matches your interest in {interest.title()}"
-                )
+            if len(word) > 2:
 
-                break
+                if (
+                    word in profile
+                    or word in internship_skills
+                ):
+
+                    reasons.append(
+                        f"Matches your interest in {interest.title()}"
+                    )
+
+                    break
 
 
-    # Location
+    # ==================================
+    # LOCATION
+    # ==================================
+
     if location:
 
         if location in internship_location:
@@ -197,7 +252,10 @@ def get_recommendation_reasons(
             )
 
 
-    # Education
+    # ==================================
+    # EDUCATION
+    # ==================================
+
     if education:
 
         if education in internship_education:
@@ -206,6 +264,10 @@ def get_recommendation_reasons(
                 "Education requirement matches"
             )
 
+
+    # ==================================
+    # DEFAULT REASON
+    # ==================================
 
     if len(reasons) == 0:
 
@@ -224,45 +286,106 @@ def get_recommendation_reasons(
 @app.route("/recommend", methods=["POST"])
 def recommend():
 
-    data = request.get_json()
+    try:
 
-    skills_text = data.get("skills", "")
-    field = data.get("field", "")
-    location = data.get("location", "")
-    education = data.get("education", "")
+        data = request.get_json()
 
-    skills = [
-        x.strip()
-        for x in skills_text.split(",")
-        if x.strip()
-    ]
+        if not isinstance(data, dict):
+            return jsonify({
+                "error": "Invalid JSON data"
+            }), 400
 
-    recommendations = get_recommendations_from_user(
-        skills,
-        field,
-        location,
-        education
-    )
 
-    results = []
+        skills_text = safe_text(
+            data.get("skills", "")
+        )
 
-    for _, row in recommendations.iterrows():
+        field = safe_text(
+            data.get("field", "")
+        )
 
-        reasons = get_recommendation_reasons(
-            row,
+        location = safe_text(
+            data.get("location", "")
+        )
+
+        education = safe_text(
+            data.get("education", "")
+        )
+
+
+        # Convert skills string into list
+
+        skills = [
+            x.strip()
+            for x in skills_text.split(",")
+            if x.strip()
+        ]
+
+
+        print("==========================================")
+        print("RECOMMENDATION REQUEST")
+        print("Skills:", skills)
+        print("Field:", field)
+        print("Location:", location)
+        print("Education:", education)
+        print("==========================================")
+
+
+        recommendations = get_recommendations_from_user(
             skills,
             field,
             location,
             education
         )
 
-        item = row.to_dict()
 
-        item["reasons"] = reasons
+        results = []
 
-        results.append(item)
 
-    return jsonify(results)
+        for _, row in recommendations.iterrows():
+
+            reasons = get_recommendation_reasons(
+                row,
+                skills,
+                field,
+                location,
+                education
+            )
+
+            item = row.to_dict()
+
+            item["reasons"] = reasons
+
+            results.append(item)
+
+
+        return jsonify(results)
+
+
+    except Exception as e:
+
+        print("==========================================")
+        print("ERROR:")
+        print(str(e))
+        print("==========================================")
+
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+
+# ==========================================
+# HOME ROUTE
+# ==========================================
+
+@app.route("/", methods=["GET"])
+def home():
+
+    return jsonify({
+        "status": "Backend is running",
+        "dataset_rows": len(merged_df)
+    })
 
 
 # ==========================================
