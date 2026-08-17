@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | InternMatch</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Dashboard-only styling.
+           Existing style.css ko touch nahi kar raha. */
+
+        .dashboard-page {
+            padding: 55px 0 80px;
+            min-height: 70vh;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 30px;
+            margin-bottom: 35px;
+        }
+
+        .dashboard-header span,
+        .dashboard-label {
+            font-size: 12px;
+            letter-spacing: 2px;
+            font-weight: 700;
+            opacity: .7;
+        }
+
+        .dashboard-header h1 {
+            margin: 10px 0 8px;
+            font-size: clamp(32px, 5vw, 52px);
+        }
+
+        .dashboard-header p {
+            max-width: 650px;
+            line-height: 1.7;
+            opacity: .72;
+        }
+
+        .profile-summary {
+            display: grid;
+            grid-template-columns: 1.4fr .6fr;
+            gap: 22px;
+            margin-bottom: 25px;
+        }
+
+        .dashboard-card {
+            border: 1px solid rgba(108,132,128,.22);
+            border-radius: 24px;
+            padding: 28px;
+            background: rgba(255,255,255,.58);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 15px 45px rgba(108,132,128,.10);
+        }
+
+        .student-card {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .student-avatar {
+            width: 72px;
+            height: 72px;
+            min-width: 72px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7B9669, #BAC8B1);
+            color: white;
+        }
+
+        .student-card h2 {
+            margin: 4px 0 7px;
+        }
+
+        .student-card p {
+            margin: 0;
+            opacity: .68;
+        }
+
+        .edit-profile-btn {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            font-weight: 700;
+            color: #6C8480;
+        }
+
+        .match-summary {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .match-summary strong {
+            display: block;
+            font-size: 48px;
+            margin: 7px 0;
+            color: #D6794D;
+        }
+
+        .match-summary p {
+            margin: 0;
+            opacity: .68;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .dashboard-card h2 {
+            margin: 8px 0 20px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .quick-action {
+            text-decoration: none;
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(108,132,128,.18);
+            background: rgba(186,200,177,.18);
+            color: inherit;
+            transition: .25s ease;
+        }
+
+        .quick-action:hover {
+            transform: translateY(-4px);
+            border-color: #DCAA89;
+        }
+
+        .quick-action strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .quick-action span {
+            font-size: 13px;
+            opacity: .65;
+        }
+
+        .recommendation {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(108,132,128,.14);
+        }
+
+        .recommendation:last-child {
+            border-bottom: 0;
+        }
+
+        .recommendation-logo {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            background: #BAC8B1;
+            color: #52665f;
+        }
+
+        .recommendation h3 {
+            margin: 0 0 4px;
+            font-size: 16px;
+        }
+
+        .recommendation p {
+            margin: 0;
+            font-size: 13px;
+            opacity: .65;
+        }
+
+        .recommendation-score {
+            margin-left: auto;
+            font-size: 12px;
+            font-weight: 800;
+            color: #D6794D;
+            white-space: nowrap;
+        }
+
+        .assistant-card {
+            margin-top: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+            background: linear-gradient(
+                120deg,
+                rgba(123,150,105,.18),
+                rgba(220,170,137,.18)
+            );
+        }
+
+        .assistant-card h2 {
+            margin-bottom: 8px;
+        }
+
+        .assistant-card p {
+            max-width: 650px;
+            line-height: 1.7;
+            opacity: .7;
+        }
+
+        .assistant-icon {
+            width: 70px;
+            height: 70px;
+            min-width: 70px;
+            border-radius: 22px;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            background: #6C8480;
+            color: white;
+        }
+
+        .dashboard-btn {
+            display: inline-block;
+            padding: 13px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            background: #D6794D;
+            color: white;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 800px) {
+            .profile-summary,
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .student-card,
+            .assistant-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <div class="top-bar">
+
+        <div class="container top-bar-content">
+
+            <div>
+                Built for India's Next Generation
+            </div>
+
+            <div class="top-links">
+                <a href="accessibility.html">Accessibility</a>
+                <a href="help.html">Help</a>
+                <a href="login.html">Logout</a>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="container nav-container">
+
+            <a href="index.html" class="brand">
+
+                <div class="brand-mark">
+                    IM
+                </div>
+
+                <div class="brand-text">
+
+                    <strong>InternMatch</strong>
+
+                    <span>
+                        AI-powered opportunity discovery
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <nav class="nav-links">
+
+                <a href="index.html">
+                    Home
+                </a>
+
+                <a href="internships.html">
+                    Internships
+                </a>
+
+            </nav>
+
+
+            <div class="nav-actions">
+
+                <a href="profile.html" class="login-link">
+                    My Profile
+                </a>
+
+                <a href="internships.html" class="register-btn">
+                    Explore Internships
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- DASHBOARD -->
+
+    <main class="dashboard-page">
+
+        <div class="container">
+
+            <div class="dashboard-header">
+
+                <div>
+
+                    <span>
+                        STUDENT DASHBOARD
+                    </span>
+
+                    <h1>
+                        Welcome back, <span>Student.</span>
+                    </h1>
+
+                    <p>
+                        Your personalized space for discovering
+                        internships, managing your profile and
+                        finding opportunities that match your goals.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- PROFILE + MATCH -->
+
+            <div class="profile-summary">
+
+                <div class="dashboard-card student-card">
+
+                    <div class="student-avatar">
+                        S
+                    </div>
+
+                    <div>
+
+                        <span class="dashboard-label">
+                            YOUR PROFILE
+                        </span>
+
+                        <h2>
+                            Student Profile
+                        </h2>
+
+                        <p>
+                            Complete your profile to improve your
+                            internship recommendations.
+                        </p>
+
+                        <a href="profile.html" class="edit-profile-btn">
+                            View / Edit Profile →
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-card match-summary">
+
+                    <span class="dashboard-label">
+                        PROFILE MATCH
+                    </span>
+
+                    <strong>
+                        94%
+                    </strong>
+
+                    <p>
+                        Your current profile compatibility
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- MAIN CARDS -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- RECOMMENDATIONS -->
+
+                <div class="dashboard-card">
+
+                    <span class="dashboard-label">
+                        AI RECOMMENDATIONS
+                    </span>
+
+                    <h2>
+                        Recommended for you
+                    </h2>
+
+
+                    <div class="recommendation">
+
+                        <div class="recommendation-logo">
+                            AI
+                        </div>
+
+                        <div>
+                            <h3>AI / ML Intern</h3>
+                            <p>Technology & Artificial Intelligence</p>
+                        </div>
+
+                        <span class="recommendation-score">
+                            94%
+                        </span>
+
+                    </div>
+
+
+                    <div class="recommendation">
+
+                        <div class="recommendation-logo">
+                            DS
+                        </div>
+
+                        <div>
+                            <h3>Data Analyst Intern</h3>
+                            <p>Data Science & Analytics</p>
+                        </div>
+
+                        <span class="recommendation-score">
+                            89%
+                        </span>
+
+                    </div>
+
+
+                    <div class="recommendation">
+
+                        <div class="recommendation-logo">
+                            SD
+                        </div>
+
+                        <div>
+                            <h3>Software Developer Intern</h3>
+                            <p>Software Development</p>
+                        </div>
+
+                        <span class="recommendation-score">
+                            87%
+                        </span>
+
+                    </div>
+
+
+                    <a href="internships.html" class="dashboard-btn">
+                        Explore All →
+                    </a>
+
+                </div>
+
+
+                <!-- QUICK ACTIONS -->
+
+                <div class="dashboard-card">
+
+                    <span class="dashboard-label">
+                        QUICK ACCESS
+                    </span>
+
+                    <h2>
+                        What do you want to do?
+                    </h2>
+
+
+                    <div class="quick-actions">
+
+                        <a href="profile.html" class="quick-action">
+
+                            <strong>
+                                👤 My Profile
+                            </strong>
+
+                            <span>
+                                View and update your information
+                            </span>
+
+                        </a>
+
+
+                        <a href="internships.html" class="quick-action">
+
+                            <strong>
+                                🔎 Find Internships
+                            </strong>
+
+                            <span>
+                                Explore available opportunities
+                            </span>
+
+                        </a>
+
+
+                        <a href="ai-assistant.html" class="quick-action">
+
+                            <strong>
+                                ✦ AI Assistant
+                            </strong>
+
+                            <span>
+                                Ask about internships and careers
+                            </span>
+
+                        </a>
+
+
+                        <a href="internships.html" class="quick-action">
+
+                            <strong>
+                                ♡ Saved Opportunities
+                            </strong>
+
+                            <span>
+                                View internships you saved
+                            </span>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- AI ASSISTANT -->
+
+            <div class="dashboard-card assistant-card">
+
+                <div>
+
+                    <span class="dashboard-label">
+                        INTERNMATCH AI ASSISTANT
+                    </span>
+
+                    <h2>
+                        Not sure which internship fits you?
+                    </h2>
+
+                    <p>
+                        Ask our assistant about internships,
+                        skills, career direction and opportunities
+                        based on your profile.
+                    </p>
+
+                    <a href="ai-assistant.html" class="dashboard-btn">
+                        Open AI Assistant →
+                    </a>
+
+                </div>
+
+
+                <div class="assistant-icon">
+                    AI
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <div class="container footer-grid">
+
+            <div class="footer-brand">
+
+                <div class="brand-mark">
+                    IM
+                </div>
+
+                <strong>
+                    InternMatch
+                </strong>
+
+                <p>
+                    AI-powered internship discovery
+                    built for India's students.
+                </p>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h4>
+                    Platform
+                </h4>
+
+                <a href="index.html">
+                    Home
+                </a>
+
+                <a href="internships.html">
+                    Internships
+                </a>
+
+                <a href="profile.html">
+                    My Profile
+                </a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h4>
+                    Explore
+                </h4>
+
+                <a href="internships.html">
+                    Opportunities
+                </a>
+
+                <a href="ai-assistant.html">
+                    AI Assistant
+                </a>
+
+                <a href="about.html">
+                    About
+                </a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h4>
+                    Account
+                </h4>
+
+                <a href="profile.html">
+                    Profile
+                </a>
+
+                <a href="login.html">
+                    Login
+                </a>
+
+                <a href="register.html">
+                    Create Profile
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="container footer-bottom">
+
+            <span>
+                © 2026 InternMatch
+            </span>
+
+            <span>
+                Built for India's students
+            </span>
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>

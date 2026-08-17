@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Assistant | InternMatch</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* =====================================================
+           AI ASSISTANT PAGE ONLY
+           Existing style.css is NOT being changed
+        ====================================================== */
+
+        .assistant-page {
+            padding: 45px 0 75px;
+            min-height: 75vh;
+        }
+
+        .assistant-heading {
+            margin-bottom: 28px;
+        }
+
+        .assistant-heading span {
+            font-size: 11px;
+            letter-spacing: 2px;
+            font-weight: 800;
+            color: #6C8480;
+        }
+
+        .assistant-heading h1 {
+            margin: 9px 0;
+            font-size: clamp(32px, 5vw, 50px);
+        }
+
+        .assistant-heading h1 span {
+            font-size: inherit;
+            letter-spacing: normal;
+            color: #D6794D;
+        }
+
+        .assistant-heading p {
+            max-width: 680px;
+            line-height: 1.7;
+            opacity: .7;
+        }
+
+
+        /* =====================================================
+           ASSISTANT LAYOUT
+        ====================================================== */
+
+        .assistant-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 22px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+
+        /* =====================================================
+           LEFT SIDEBAR
+        ====================================================== */
+
+        .assistant-sidebar {
+            border: 1px solid rgba(108,132,128,.2);
+            border-radius: 22px;
+            padding: 22px;
+            background: rgba(255,255,255,.58);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 15px 40px rgba(108,132,128,.08);
+            height: fit-content;
+        }
+
+        .assistant-sidebar-label {
+            font-size: 10px;
+            letter-spacing: 1.8px;
+            font-weight: 800;
+            color: #6C8480;
+            margin-bottom: 14px;
+        }
+
+        .assistant-topic {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            text-align: left;
+            padding: 13px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font: inherit;
+            color: inherit;
+            transition: .2s ease;
+        }
+
+        .assistant-topic:hover {
+            background: rgba(186,200,177,.25);
+            transform: translateX(3px);
+        }
+
+        .assistant-topic.active {
+            background: rgba(123,150,105,.16);
+            font-weight: 700;
+        }
+
+        .assistant-tip {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 15px;
+            background: linear-gradient(
+                135deg,
+                rgba(123,150,105,.13),
+                rgba(220,170,137,.15)
+            );
+        }
+
+        .assistant-tip strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .assistant-tip p {
+            margin: 0;
+            font-size: 12px;
+            line-height: 1.6;
+            opacity: .65;
+        }
+
+
+        /* =====================================================
+           CHAT WINDOW
+        ====================================================== */
+
+        .chat-card {
+            min-width: 0;
+            height: 650px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(108,132,128,.2);
+            border-radius: 24px;
+            overflow: hidden;
+            background: rgba(255,255,255,.62);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 18px 50px rgba(108,132,128,.1);
+        }
+
+
+        /* CHAT HEADER */
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 20px 23px;
+            border-bottom: 1px solid rgba(108,132,128,.15);
+            background: rgba(186,200,177,.13);
+        }
+
+        .chat-ai-icon {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            border-radius: 15px;
+            display: grid;
+            place-items: center;
+            background: #6C8480;
+            color: white;
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .chat-header-text strong {
+            display: block;
+            font-size: 16px;
+        }
+
+        .chat-header-text span {
+            display: block;
+            margin-top: 3px;
+            font-size: 12px;
+            opacity: .6;
+        }
+
+        .online-status {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            opacity: .65;
+        }
+
+        .online-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #7B9669;
+        }
+
+
+        /* =====================================================
+           MESSAGES
+        ====================================================== */
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 14px 17px;
+            border-radius: 17px;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .message.bot .message-content {
+            background: rgba(186,200,177,.22);
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.user .message-content {
+            background: #6C8480;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-time {
+            display: block;
+            margin-top: 5px;
+            font-size: 9px;
+            opacity: .45;
+        }
+
+
+        /* =====================================================
+           SUGGESTED QUESTIONS
+        ====================================================== */
+
+        .suggested-area {
+            padding: 0 25px 16px;
+        }
+
+        .suggested-label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 10px;
+            letter-spacing: 1.4px;
+            font-weight: 800;
+            opacity: .55;
+        }
+
+        .suggested-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .suggestion {
+            border: 1px solid rgba(108,132,128,.22);
+            border-radius: 20px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,.65);
+            cursor: pointer;
+            font: inherit;
+            font-size: 11px;
+            color: inherit;
+            transition: .2s ease;
+        }
+
+        .suggestion:hover {
+            border-color: #DCAA89;
+            transform: translateY(-2px);
+        }
+
+
+        /* =====================================================
+           CHAT INPUT
+        ====================================================== */
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            padding: 17px 20px;
+            border-top: 1px solid rgba(108,132,128,.15);
+            background: rgba(255,255,255,.4);
+        }
+
+        .chat-input {
+            flex: 1;
+            min-width: 0;
+            border: 1px solid rgba(108,132,128,.23);
+            border-radius: 13px;
+            padding: 13px 15px;
+            background: rgba(255,255,255,.7);
+            font: inherit;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: #7B9669;
+            box-shadow: 0 0 0 3px rgba(123,150,105,.1);
+        }
+
+        .send-button {
+            border: 0;
+            border-radius: 13px;
+            padding: 0 20px;
+            background: #D6794D;
+            color: white;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+        }
+
+
+        /* =====================================================
+           TYPING INDICATOR
+        ====================================================== */
+
+        .typing {
+            display: none;
+            padding: 0 25px 12px;
+            font-size: 11px;
+            opacity: .55;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ====================================================== */
+
+        @media (max-width: 800px) {
+
+            .assistant-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .assistant-sidebar {
+                display: none;
+            }
+
+            .chat-card {
+                height: 620px;
+            }
+        }
+
+        @media (max-width: 520px) {
+
+            .assistant-page {
+                padding-top: 35px;
+            }
+
+            .chat-card {
+                height: 600px;
+                border-radius: 18px;
+            }
+
+            .chat-messages {
+                padding: 18px;
+            }
+
+            .message-content {
+                max-width: 88%;
+            }
+
+            .suggested-area {
+                padding: 0 18px 13px;
+            }
+
+            .chat-input-area {
+                padding: 12px;
+            }
+
+            .send-button {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <div class="top-bar">
+
+        <div class="container top-bar-content">
+
+            <div>
+                Built for India's Next Generation
+            </div>
+
+            <div class="top-links">
+                <a href="accessibility.html">Accessibility</a>
+                <a href="help.html">Help</a>
+                <a href="login.html">Logout</a>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <header class="navbar">
+
+        <div class="container nav-container">
+
+
+            <!-- BRAND -->
+
+            <a href="index.html" class="brand">
+
+                <div class="brand-mark">
+                    IM
+                </div>
+
+                <div class="brand-text">
+
+                    <strong>
+                        InternMatch
+                    </strong>
+
+                    <span>
+                        AI-powered opportunity discovery
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <!-- NAVIGATION -->
+
+            <nav class="nav-links">
+
+                <a href="index.html">
+                    Home
+                </a>
+
+                <a href="internships.html">
+                    Internships
+                </a>
+
+            </nav>
+
+
+            <!-- ACTIONS -->
+
+            <div class="nav-actions">
+
+                <a
+                    href="dashboard.html"
+                    class="login-link"
+                >
+                    Dashboard
+                </a>
+
+                <a
+                    href="profile.html"
+                    class="register-btn"
+                >
+                    My Profile
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="assistant-page">
+
+        <div class="container">
+
+
+            <!-- PAGE HEADING -->
+
+            <div class="assistant-heading">
+
+                <span>
+                    INTERNMATCH AI ASSISTANT
+                </span>
+
+                <h1>
+                    Ask. Explore.
+                    <span>Find your fit.</span>
+                </h1>
+
+                <p>
+                    Get help discovering internships, understanding
+                    required skills and deciding which opportunities
+                    may fit your career direction.
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 ASSISTANT LAYOUT
+            ================================================== -->
+
+            <div class="assistant-layout">
+
+
+                <!-- =================================================
+                     SIDEBAR
+                ================================================== -->
+
+                <aside class="assistant-sidebar">
+
+                    <div class="assistant-sidebar-label">
+                        EXPLORE
+                    </div>
+
+
+                    <button
+                        class="assistant-topic active"
+                        onclick="setTopic('Internship recommendations')"
+                    >
+                        🔎 Internship recommendations
+                    </button>
+
+
+                    <button
+                        class="assistant-topic"
+                        onclick="setTopic('Skills')"
+                    >
+                        ✦ Skills to learn
+                    </button>
+
+
+                    <button
+                        class="assistant-topic"
+                        onclick="setTopic('Career')"
+                    >
+                        ◇ Career direction
+                    </button>
+
+
+                    <button
+                        class="assistant-topic"
+                        onclick="setTopic('Profile')"
+                    >
+                        👤 Improve my profile
+                    </button>
+
+
+                    <div class="assistant-tip">
+
+                        <strong>
+                            💡 Tip
+                        </strong>
+
+                        <p>
+                            The more complete your profile is,
+                            the more personalized your future
+                            recommendations can become.
+                        </p>
+
+                    </div>
+
+                </aside>
+
+
+                <!-- =================================================
+                     CHAT
+                ================================================== -->
+
+                <section class="chat-card">
+
+
+                    <!-- CHAT HEADER -->
+
+                    <div class="chat-header">
+
+                        <div class="chat-ai-icon">
+                            AI
+                        </div>
+
+                        <div class="chat-header-text">
+
+                            <strong>
+                                InternMatch Assistant
+                            </strong>
+
+                            <span>
+                                Internship & career guidance
+                            </span>
+
+                        </div>
+
+                        <div class="online-status">
+
+                            <span class="online-dot"></span>
+
+                            Available
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- MESSAGES -->
+
+                    <div
+                        class="chat-messages"
+                        id="chatMessages"
+                    >
+
+
+                        <!-- BOT MESSAGE -->
+
+                        <div class="message bot">
+
+                            <div class="message-content">
+
+                                Hi! I'm the InternMatch AI Assistant. 👋
+
+                                <br><br>
+
+                                I can help you explore internships,
+                                understand skill requirements and
+                                think about which opportunities may
+                                fit your profile.
+
+                                <span class="message-time">
+                                    InternMatch AI
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- USER EXAMPLE -->
+
+                        <div class="message user">
+
+                            <div class="message-content">
+
+                                What internships would be good
+                                for someone who knows Python and SQL?
+
+                                <span class="message-time">
+                                    You
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- BOT EXAMPLE -->
+
+                        <div class="message bot">
+
+                            <div class="message-content">
+
+                                Python + SQL can be useful for
+                                opportunities such as Data Analyst,
+                                Data Science and some AI / ML roles.
+
+                                <br><br>
+
+                                Once your profile is connected,
+                                I can use your actual skills,
+                                education and preferences to make
+                                more personalized recommendations.
+
+                                <span class="message-time">
+                                    InternMatch AI
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TYPING -->
+
+                    <div
+                        class="typing"
+                        id="typingIndicator"
+                    >
+                        InternMatch AI is thinking...
+                    </div>
+
+
+                    <!-- SUGGESTIONS -->
+
+                    <div class="suggested-area">
+
+                        <span class="suggested-label">
+                            TRY ASKING
+                        </span>
+
+
+                        <div class="suggested-buttons">
+
+                            <button
+                                class="suggestion"
+                                onclick="useSuggestion('Which internship is best for my skills?')"
+                            >
+                                Best internship for my skills?
+                            </button>
+
+
+                            <button
+                                class="suggestion"
+                                onclick="useSuggestion('What skills should I learn?')"
+                            >
+                                What skills should I learn?
+                            </button>
+
+
+                            <button
+                                class="suggestion"
+                                onclick="useSuggestion('Find remote internships')"
+                            >
+                                Find remote internships
+                            </button>
+
+
+                            <button
+                                class="suggestion"
+                                onclick="useSuggestion('How can I improve my profile?')"
+                            >
+                                Improve my profile
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- INPUT -->
+
+                    <form
+                        class="chat-input-area"
+                        id="chatForm"
+                    >
+
+                        <input
+                            type="text"
+                            id="chatInput"
+                            class="chat-input"
+                            placeholder="Ask about internships, skills or careers..."
+                            autocomplete="off"
+                        >
+
+                        <button
+                            type="submit"
+                            class="send-button"
+                        >
+                            Send →
+                        </button>
+
+                    </form>
+
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="footer">
+
+        <div class="container footer-grid">
+
+
+            <div class="footer-brand">
+
+                <div class="brand-mark">
+                    IM
+                </div>
+
+                <strong>
+                    InternMatch
+                </strong>
+
+                <p>
+                    AI-powered internship discovery
+                    built for India's students.
+                </p>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h4>
+                    Platform
+                </h4>
+
+                <a href="index.html">
+                    Home
+                </a>
+
+                <a href="internships.html">
+                    Internships
+                </a>
+
+                <a href="dashboard.html">
+                    Dashboard
+                </a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h4>
+                    Account
+                </h4>
+
+                <a href="profile.html">
+                    My Profile
+                </a>
+
+                <a href="login.html">
+                    Login
+                </a>
+
+                <a href="register.html">
+                    Create Profile
+                </a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h4>
+                    Explore
+                </h4>
+
+                <a href="internships.html">
+                    Opportunities
+                </a>
+
+                <a href="about.html">
+                    About
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="container footer-bottom">
+
+            <span>
+                © 2026 InternMatch
+            </span>
+
+            <span>
+                Built for India's students
+            </span>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         FRONTEND CHAT LOGIC
+         Temporary demo until backend / AI API is connected
+    ====================================================== -->
+
+    <script>
+
+        const chatForm =
+            document.getElementById("chatForm");
+
+        const chatInput =
+            document.getElementById("chatInput");
+
+        const chatMessages =
+            document.getElementById("chatMessages");
+
+        const typingIndicator =
+            document.getElementById("typingIndicator");
+
+
+        /* =====================================================
+           ADD MESSAGE
+        ====================================================== */
+
+        function addMessage(text, type) {
+
+            const message =
+                document.createElement("div");
+
+            message.className =
+                "message " + type;
+
+
+            const content =
+                document.createElement("div");
+
+            content.className =
+                "message-content";
+
+
+            content.innerHTML =
+                text +
+                '<span class="message-time">' +
+                (type === "user"
+                    ? "You"
+                    : "InternMatch AI") +
+                '</span>';
+
+
+            message.appendChild(content);
+
+            chatMessages.appendChild(message);
+
+            chatMessages.scrollTop =
+                chatMessages.scrollHeight;
+        }
+
+
+        /* =====================================================
+           DEMO AI RESPONSE
+        ====================================================== */
+
+        function getDemoResponse(message) {
+
+            const text =
+                message.toLowerCase();
+
+
+            if (
+                text.includes("python") ||
+                text.includes("sql") ||
+                text.includes("data")
+            ) {
+
+                return `
+                    Based on those skills, you could explore
+                    <strong>Data Analyst</strong>,
+                    <strong>Data Science</strong> and
+                    some <strong>AI / ML</strong> internships.
+                    <br><br>
+                    Your exact recommendations can become
+                    personalized once your profile is connected
+                    to the internship database.
+                `;
+
+            }
+
+
+            if (
+                text.includes("remote")
+            ) {
+
+                return `
+                    Remote internships can be filtered by
+                    location and field.
+                    <br><br>
+                    Try the <strong>Internships</strong> page
+                    to explore available remote opportunities.
+                `;
+
+            }
+
+
+            if (
+                text.includes("profile") ||
+                text.includes("improve")
+            ) {
+
+                return `
+                    A stronger profile should include your
+                    <strong>skills, education, interests,
+                    preferred field and location</strong>.
+                    <br><br>
+                    You can update these from
+                    <strong>My Profile</strong>.
+                `;
+
+            }
+
+
+            if (
+                text.includes("skill") ||
+                text.includes("learn")
+            ) {
+
+                return `
+                    Start with skills that match your target
+                    field. For example, Python + SQL + data
+                    analysis can be useful for data-related
+                    internships.
+                    <br><br>
+                    Your profile will eventually help us
+                    personalize these suggestions.
+                `;
+
+            }
+
+
+            return `
+                I can help you with internships, skills,
+                career direction and profile improvement.
+                <br><br>
+                Try asking:
+                <strong>"Which internship is best for my
+                skills?"</strong>
+            `;
+
+        }
+
+
+        /* =====================================================
+           SEND MESSAGE
+        ====================================================== */
+
+        chatForm.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+
+                const message =
+                    chatInput.value.trim();
+
+
+                if (!message) {
+                    return;
+                }
+
+
+                addMessage(
+                    message,
+                    "user"
+                );
+
+
+                chatInput.value = "";
+
+
+                typingIndicator.style.display =
+                    "block";
+
+
+                chatMessages.scrollTop =
+                    chatMessages.scrollHeight;
+
+
+                setTimeout(function () {
+
+                    typingIndicator.style.display =
+                        "none";
+
+
+                    const response =
+                        getDemoResponse(message);
+
+
+                    addMessage(
+                        response,
+                        "bot"
+                    );
+
+                }, 700);
+
+            }
+        );
+
+
+        /* =====================================================
+           SUGGESTION BUTTON
+        ====================================================== */
+
+        function useSuggestion(text) {
+
+            chatInput.value = text;
+
+            chatInput.focus();
+
+        }
+
+
+        /* =====================================================
+           SIDEBAR TOPICS
+        ====================================================== */
+
+        function setTopic(topic) {
+
+            const buttons =
+                document.querySelectorAll(
+                    ".assistant-topic"
+                );
+
+
+            buttons.forEach(function (button) {
+
+                button.classList.remove("active");
+
+            });
+
+
+            event.target.classList.add("active");
+
+
+            chatInput.value =
+                "Help me with " + topic.toLowerCase();
+
+            chatInput.focus();
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>

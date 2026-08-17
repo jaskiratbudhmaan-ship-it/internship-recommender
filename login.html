@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | InternMatch</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container top-bar-content">
+    <div>Built for India's Next Generation</div>
+    <div class="top-links">
+      <a href="accessibility.html">Accessibility</a>
+      <a href="help.html">Help</a>
+    </div>
+  </div>
+</div>
+
+<header class="navbar">
+  <div class="container nav-container">
+    <a href="index.html" class="brand">
+      <div class="brand-mark">IM</div>
+      <div class="brand-text">
+        <strong>InternMatch</strong>
+        <span>AI-powered opportunity discovery</span>
+      </div>
+    </a>
+
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="internships.html">Internships</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a href="login.html" class="login-link">Login</a>
+      <a href="register.html" class="register-btn">Create Profile</a>
+    </div>
+  </div>
+</header>
+
+<main class="login-page">
+  <div class="login-container">
+
+    <section class="login-intro">
+      <span class="login-label">WELCOME BACK</span>
+      <h1>Continue your <span>journey.</span></h1>
+      <p>Your profile, opportunities and personalized internship recommendations are waiting for you.</p>
+
+      <div class="login-ai-visual">
+        <div class="login-orbit orbit-one"></div>
+        <div class="login-orbit orbit-two"></div>
+        <div class="login-ai-core">
+          <span>AI</span>
+          <strong>MATCH</strong>
+        </div>
+        <div class="login-floating-card card-one">
+          <span>Skills</span><strong>94%</strong>
+        </div>
+        <div class="login-floating-card card-two">
+          <span>Interests</span><strong>91%</strong>
+        </div>
+      </div>
+
+      <div class="login-note">
+        <span>●</span>
+        Personalized recommendations based on your profile.
+      </div>
+    </section>
+
+    <section class="login-card">
+      <div class="login-card-header">
+        <div>
+          <span>STUDENT ACCESS</span>
+          <h2>Welcome back</h2>
+        </div>
+        <div class="login-ai-badge">AI</div>
+      </div>
+
+      <form class="login-form" id="loginForm">
+        <div class="form-group">
+          <label for="loginId">Email or Username</label>
+          <input type="text" id="loginId" name="loginId"
+                 placeholder="Enter your email or username" required>
+        </div>
+
+        <div class="form-group">
+          <div class="password-label-row">
+            <label for="loginPassword">Password</label>
+            <a href="#" class="forgot-password">Forgot password?</a>
+          </div>
+
+          <div class="password-wrapper">
+            <input type="password" id="loginPassword" name="password"
+                   placeholder="Enter your password" required>
+            <button type="button" id="togglePassword"
+                    class="password-toggle" aria-label="Show password">Show</button>
+          </div>
+        </div>
+
+        <label class="remember-check">
+          <input type="checkbox" name="remember">
+          <span>Keep me signed in</span>
+        </label>
+
+        <button type="submit" class="login-submit">
+          Login to InternMatch <span>→</span>
+        </button>
+      </form>
+
+      <div class="login-register">
+        Don't have an account?
+        <a href="register.html">Create your profile</a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer-grid">
+
+    <div class="footer-brand">
+      <div class="brand-mark">IM</div>
+      <strong>InternMatch</strong>
+      <p>AI-powered internship discovery built for India's students.</p>
+    </div>
+
+    <div class="footer-column">
+      <h4>Platform</h4>
+      <a href="index.html">Home</a>
+      <a href="internships.html">Internships</a>
+      <a href="register.html">Create Profile</a>
+      <a href="login.html">Login</a>
+    </div>
+
+    <div class="footer-column">
+      <h4>Company</h4>
+      <a href="about.html">About</a>
+      <a href="internships.html">Opportunities</a>
+    </div>
+
+    <div class="footer-column">
+      <h4>Get Started</h4>
+      <a href="register.html">Create Profile</a>
+      <a href="login.html">Student Login</a>
+      <a href="about.html">Our Mission</a>
+    </div>
+
+  </div>
+
+  <div class="container footer-bottom">
+    <span>© 2026 InternMatch</span>
+    <span>Built for India's students</span>
+  </div>
+</footer>
+
+<script>
+const passwordInput = document.getElementById("loginPassword");
+const togglePassword = document.getElementById("togglePassword");
+const loginForm = document.getElementById("loginForm");
+
+togglePassword.addEventListener("click", function () {
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    togglePassword.textContent = "Hide";
+    togglePassword.setAttribute("aria-label", "Hide password");
+  } else {
+    passwordInput.type = "password";
+    togglePassword.textContent = "Show";
+    togglePassword.setAttribute("aria-label", "Show password");
+  }
+});
+
+loginForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const loginId = document.getElementById("loginId").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  if (
+    loginId === "student@mmdu.edu.in" &&
+    password === "MMDU@2026"
+  ) {
+    window.location.href = "profile.html";
+  } else {
+    alert(
+      "Invalid demo login.\n\n" +
+      "Email: student@mmdu.edu.in\n" +
+      "Password: MMDU@2026"
+    );
+  }
+});
+</script>
+
+</body>
+</html>
