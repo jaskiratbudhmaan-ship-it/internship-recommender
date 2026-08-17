@@ -1,49 +1,1497 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>My Recommendations | InternMatch</title>
+
 <link rel="stylesheet" href="style.css">
+
+<style>
+.recommendation-card {
+    position: relative;
+}
+
+.match-reasons {
+    margin-top: 18px;
+}
+
+.match-reasons-title {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 9px;
+    opacity: .7;
+}
+
+.reason-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.reason-tag {
+    padding: 7px 10px;
+    border-radius: 10px;
+    background: rgba(123,150,105,.12);
+    font-size: 12px;
+}
+
+.loading-state,
+.error-state,
+.empty-state,
+.no-profile {
+    text-align: center;
+    padding: 50px 20px;
+    width: 100%;
+}
+
+.retry-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 10px;
+    background: #D6794D;
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+}
+
+.loading-spinner {
+    width: 35px;
+    height: 35px;
+    border: 4px solid rgba(108,132,128,.2);
+    border-top-color: #D6794D;
+    border-radius: 50%;
+    margin: 0 auto 18px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+</style>
+
 </head>
+
+
 <body>
-<!-- =====================================================
-         TOP BAR
-    ====================================================== -->
 
-    <div class="top-bar">
 
-        <div class="container top-bar-content">
+<!-- TOP BAR -->
 
-            <div>
-                Built for India's Next Generation
-            </div>
+<div class="top-bar">
 
-            <div class="top-links">
-                <a href="accessibility.html">Accessibility</a>
-                <a href="help.html">Help</a>
-                <a href="login.html">Logout</a>
-            </div>
+<div class="container top-bar-content">
 
-        </div>
+<div>
+Built for India's Next Generation
+</div>
 
-    </div>
-    <header class="navbar"><div class="container nav-container"><a href="index.html" class="brand"><div class="brand-mark">IM</div><div class="brand-text"><strong>InternMatch</strong><span>AI-powered opportunity discovery</span></div></a><nav class="nav-links"><a href="index.html">Home</a><a href="internships.html">Internships</a><a href="results.html" class="active">My Matches</a></nav><div class="nav-actions"><a href="register.html" class="register-btn">Update Profile</a></div></div></header>
-<main class="results-page"><div class="container results-container">
-<section class="results-header"><div class="results-heading"><span class="results-label">PERSONALIZED FOR YOU</span><h1>Your internship <span>matches.</span></h1><p>Based on your skills, education and interests, we've found opportunities that may fit your profile.</p></div><div class="profile-score-card"><div class="score-ring"><span>94%</span></div><div><span>PROFILE MATCH</span><strong>Strong profile</strong><small>Your profile is ready for recommendations.</small></div></div></section>
-<section class="results-toolbar"><div class="results-count"><strong>6</strong> opportunities matched your profile</div><div class="results-filters"><button type="button" class="filter-btn active">Best Match</button><button type="button" class="filter-btn">Latest</button><button type="button" class="filter-btn">Remote</button></div></section>
-<section class="match-explanation"><div class="match-ai-icon">AI</div><div class="match-explanation-content"><span>WHY THESE RESULTS?</span><h3>Your recommendations are based on your profile.</h3><p>InternMatch compares your skills, interests, education and preferred career direction with internship requirements.</p></div><div class="match-factors"><span>Skills</span><span>Interests</span><span>Education</span></div></section>
-<section class="recommendations-section"><div class="section-heading-row"><div><span>AI RECOMMENDATIONS</span><h2>Opportunities for you</h2></div><a href="internships.html">Explore all →</a></div>
-<div class="recommendations-grid">
-<article class="recommendation-card"><div class="recommendation-top"><div class="company-logo">AI</div><span class="match-badge">94% MATCH</span></div><h3>AI / ML Intern</h3><p class="recommendation-company">Technology & Artificial Intelligence</p><div class="recommendation-meta"><span>📍 Remote</span><span>⏱ 6 Months</span><span>Full Time</span></div><div class="skill-section"><span>MATCHED SKILLS</span><div class="skill-tags"><span>Python</span><span>Machine Learning</span><span>Data Analysis</span></div></div><a href="internship-details.html?job=aiml" class="recommendation-btn">View Opportunity <span>→</span></a></article>
-<article class="recommendation-card"><div class="recommendation-top"><div class="company-logo">DS</div><span class="match-badge">89% MATCH</span></div><h3>Data Analyst Intern</h3><p class="recommendation-company">Data Science & Analytics</p><div class="recommendation-meta"><span>📍 Delhi</span><span>⏱ 3 Months</span><span>Hybrid</span></div><div class="skill-section"><span>MATCHED SKILLS</span><div class="skill-tags"><span>Python</span><span>SQL</span><span>Excel</span></div></div><a href="internship-details.html?job=data" class="recommendation-btn">View Opportunity <span>→</span></a></article>
-<article class="recommendation-card"><div class="recommendation-top"><div class="company-logo">PM</div><span class="match-badge">92% MATCH</span></div><h3>Policy & Technology Intern</h3><p class="recommendation-company">Public Policy & Digital India</p><div class="recommendation-meta"><span>📍 New Delhi</span><span>⏱ 6 Months</span><span>Government</span></div><div class="skill-section"><span>MATCHED SKILLS</span><div class="skill-tags"><span>Research</span><span>Technology</span><span>Communication</span></div></div><a href="internship-details.html?job=policy" class="recommendation-btn">View Opportunity <span>→</span></a></article>
-<article class="recommendation-card"><div class="recommendation-top"><div class="company-logo">WD</div><span class="match-badge">86% MATCH</span></div><h3>Web Development Intern</h3><p class="recommendation-company">Software & Web Technologies</p><div class="recommendation-meta"><span>📍 Remote</span><span>⏱ 4 Months</span><span>Full Time</span></div><div class="skill-section"><span>MATCHED SKILLS</span><div class="skill-tags"><span>HTML</span><span>CSS</span><span>JavaScript</span></div></div><a href="internship-details.html?job=software" class="recommendation-btn">View Opportunity <span>→</span></a></article>
-<article class="recommendation-card"><div class="recommendation-top"><div class="company-logo">CY</div><span class="match-badge">82% MATCH</span></div><h3>Cybersecurity Intern</h3><p class="recommendation-company">Cybersecurity & Digital Safety</p><div class="recommendation-meta"><span>📍 Bengaluru</span><span>⏱ 6 Months</span><span>Hybrid</span></div><div class="skill-section"><span>MATCHED SKILLS</span><div class="skill-tags"><span>Networking</span><span>Python</span><span>Security</span></div></div><a href="internship-details.html?job=cyber" class="recommendation-btn">View Opportunity <span>→</span></a></article>
-<article class="recommendation-card"><div class="recommendation-top"><div class="company-logo">UX</div><span class="match-badge">79% MATCH</span></div><h3>UI / UX Design Intern</h3><p class="recommendation-company">Product Design & Experience</p><div class="recommendation-meta"><span>📍 Mumbai</span><span>⏱ 3 Months</span><span>Hybrid</span></div><div class="skill-section"><span>MATCHED SKILLS</span><div class="skill-tags"><span>Figma</span><span>UI Design</span><span>Research</span></div></div><a href="internship-details.html?job=uiux" class="recommendation-btn">View Opportunity <span>→</span></a></article>
-</div></section>
-<section class="profile-improvement"><div class="improvement-content"><span>IMPROVE YOUR MATCHES</span><h2>Make your profile more complete.</h2><p>Adding more skills and interests can help InternMatch understand what opportunities are relevant to you.</p><a href="register.html" class="primary-btn">Update Profile <span>→</span></a></div><div class="profile-progress"><div class="progress-header"><span>Profile completion</span><strong>78%</strong></div><div class="progress-bar"><div class="progress-fill" style="width:78%;"></div></div><div class="progress-items"><span>✓ Education</span><span>✓ Interests</span><span>✓ Basic details</span><span>+ Add more skills</span></div></div></section>
-</div></main>
-<footer class="footer"><div class="container footer-grid"><div class="footer-brand"><div class="brand-mark">IM</div><strong>InternMatch</strong><p>AI-powered internship discovery built for India's students.</p></div><div class="footer-column"><h4>Platform</h4><a href="index.html">Home</a><a href="internships.html">Internships</a><a href="results.html">My Matches</a><a href="register.html">Update Profile</a></div><div class="footer-column"><h4>Company</h4><a href="about.html">About</a><a href="internships.html">Opportunities</a></div><div class="footer-column"><h4>Account</h4><a href="register.html">Profile</a><a href="login.html">Logout</a></div></div><div class="container footer-bottom"><span>© 2026 InternMatch</span><span>Built for India's students</span></div></footer>
+<div class="top-links">
+
+<a href="accessibility.html">
+Accessibility
+</a>
+
+<a href="help.html">
+Help
+</a>
+
+<a href="login.html">
+Logout
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- NAVBAR -->
+
+<header class="navbar">
+
+<div class="container nav-container">
+
+<a href="index.html" class="brand">
+
+<div class="brand-mark">
+IM
+</div>
+
+<div class="brand-text">
+
+<strong>
+InternMatch
+</strong>
+
+<span>
+AI-powered opportunity discovery
+</span>
+
+</div>
+
+</a>
+
+
+<nav class="nav-links">
+
+<a href="index.html">
+Home
+</a>
+
+<a href="internships.html">
+Internships
+</a>
+
+<a href="results.html" class="active">
+My Matches
+</a>
+
+</nav>
+
+
+<div class="nav-actions">
+
+<a
+href="profile.html"
+class="register-btn">
+
+Update Profile
+
+</a>
+
+</div>
+
+</div>
+
+</header>
+
+
+
+<!-- RESULTS -->
+
+<main class="results-page">
+
+<div class="container results-container">
+
+
+<section class="results-header">
+
+<div class="results-heading">
+
+<span class="results-label">
+PERSONALIZED FOR YOU
+</span>
+
+<h1>
+Your internship <span>matches.</span>
+</h1>
+
+<p>
+Based on your skills, education and interests,
+we've found opportunities that may fit your profile.
+</p>
+
+</div>
+
+
+<div class="profile-score-card">
+
+<div class="score-ring">
+
+<span id="profileScore">
+--%
+</span>
+
+</div>
+
+<div>
+
+<span>
+PROFILE MATCH
+</span>
+
+<strong id="profileStrength">
+Loading...
+</strong>
+
+<small>
+Your profile is ready for recommendations.
+</small>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- TOOLBAR -->
+
+<section class="results-toolbar">
+
+<div class="results-count">
+
+<strong id="resultsCount">
+0
+</strong>
+
+opportunities matched your profile
+
+</div>
+
+
+<div class="results-filters">
+
+<button
+type="button"
+class="filter-btn active"
+id="bestMatchBtn">
+
+Best Match
+
+</button>
+
+<button
+type="button"
+class="filter-btn"
+id="latestBtn">
+
+Latest
+
+</button>
+
+<button
+type="button"
+class="filter-btn"
+id="remoteBtn">
+
+Remote
+
+</button>
+
+</div>
+
+</section>
+
+
+
+<!-- AI EXPLANATION -->
+
+<section class="match-explanation">
+
+<div class="match-ai-icon">
+AI
+</div>
+
+<div class="match-explanation-content">
+
+<span>
+WHY THESE RESULTS?
+</span>
+
+<h3>
+Your recommendations are based on your profile.
+</h3>
+
+<p>
+InternMatch compares your skills, interests,
+education and preferred career direction with
+internship requirements.
+</p>
+
+</div>
+
+<div class="match-factors">
+
+<span>Skills</span>
+<span>Interests</span>
+<span>Education</span>
+
+</div>
+
+</section>
+
+
+
+<!-- RECOMMENDATIONS -->
+
+<section class="recommendations-section">
+
+<div class="section-heading-row">
+
+<div>
+
+<span>
+AI RECOMMENDATIONS
+</span>
+
+<h2>
+Opportunities for you
+</h2>
+
+</div>
+
+<a href="internships.html">
+Explore all →
+</a>
+
+</div>
+
+
+
+<!-- LOADING -->
+
+<div
+id="loadingMessage"
+class="loading-state">
+
+<div class="loading-spinner"></div>
+
+<h3>
+Finding the best internships for you...
+</h3>
+
+<p>
+Our recommendation engine is analyzing your profile.
+</p>
+
+</div>
+
+
+
+<!-- ERROR -->
+
+<div
+id="errorMessage"
+class="error-state"
+style="display:none;">
+
+<h3>
+❌ Could not load recommendations.
+</h3>
+
+<p>
+Please try again or update your profile.
+</p>
+
+<button
+class="retry-btn"
+onclick="loadRecommendations()">
+
+Try Again
+
+</button>
+
+</div>
+
+
+
+<!-- NO PROFILE -->
+
+<div
+id="noProfileMessage"
+class="no-profile"
+style="display:none;">
+
+<h3>
+Complete your profile first
+</h3>
+
+<p>
+We need your skills and preferences
+to find suitable internships.
+</p>
+
+<a
+href="profile.html"
+class="retry-btn">
+
+Complete Profile →
+
+</a>
+
+</div>
+
+
+
+<!-- DYNAMIC CARDS -->
+
+<div
+class="recommendations-grid"
+id="recommendationsGrid">
+
+</div>
+
+
+</section>
+
+
+
+<!-- PROFILE IMPROVEMENT -->
+
+<section class="profile-improvement">
+
+<div class="improvement-content">
+
+<span>
+IMPROVE YOUR MATCHES
+</span>
+
+<h2>
+Make your profile more complete.
+</h2>
+
+<p>
+Adding more skills and interests can help InternMatch
+understand what opportunities are relevant to you.
+</p>
+
+<a
+href="profile.html"
+class="primary-btn">
+
+Update Profile
+<span>→</span>
+
+</a>
+
+</div>
+
+
+<div class="profile-progress">
+
+<div class="progress-header">
+
+<span>
+Profile completion
+</span>
+
+<strong>
+78%
+</strong>
+
+</div>
+
+<div class="progress-bar">
+
+<div
+class="progress-fill"
+style="width:78%;">
+
+</div>
+
+</div>
+
+<div class="progress-items">
+
+<span>✓ Education</span>
+<span>✓ Interests</span>
+<span>✓ Basic details</span>
+<span>+ Add more skills</span>
+
+</div>
+
+</div>
+
+</section>
+
+
+</div>
+
+</main>
+
+
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+<div class="container footer-grid">
+
+
+<div class="footer-brand">
+
+<div class="brand-mark">
+IM
+</div>
+
+<strong>
+InternMatch
+</strong>
+
+<p>
+AI-powered internship discovery built for India's students.
+</p>
+
+</div>
+
+
+<div class="footer-column">
+
+<h4>
+Platform
+</h4>
+
+<a href="index.html">
+Home
+</a>
+
+<a href="internships.html">
+Internships
+</a>
+
+<a href="results.html">
+My Matches
+</a>
+
+<a href="profile.html">
+Update Profile
+</a>
+
+</div>
+
+
+<div class="footer-column">
+
+<h4>
+Company
+</h4>
+
+<a href="about.html">
+About
+</a>
+
+<a href="internships.html">
+Opportunities
+</a>
+
+</div>
+
+
+<div class="footer-column">
+
+<h4>
+Account
+</h4>
+
+<a href="profile.html">
+Profile
+</a>
+
+<a href="login.html">
+Logout
+</a>
+
+</div>
+
+
+</div>
+
+
+<div class="container footer-bottom">
+
+<span>
+© 2026 InternMatch
+</span>
+
+<span>
+Built for India's students
+</span>
+
+</div>
+
+</footer>
+
+
+
+<script>
+
+
+/* =========================================
+   YOUR RENDER BACKEND
+========================================= */
+
+const API_URL =
+"https://internship-recommender-egnc.onrender.com/recommend";
+
+
+/* =========================================
+   VARIABLES
+========================================= */
+
+let allRecommendations = [];
+
+const grid =
+document.getElementById("recommendationsGrid");
+
+const loading =
+document.getElementById("loadingMessage");
+
+const errorMessage =
+document.getElementById("errorMessage");
+
+const noProfileMessage =
+document.getElementById("noProfileMessage");
+
+const resultsCount =
+document.getElementById("resultsCount");
+
+const profileScore =
+document.getElementById("profileScore");
+
+const profileStrength =
+document.getElementById("profileStrength");
+
+
+
+/* =========================================
+   START
+========================================= */
+
+document.addEventListener(
+"DOMContentLoaded",
+function() {
+
+loadRecommendations();
+
+});
+
+
+
+/* =========================================
+   LOAD RECOMMENDATIONS
+========================================= */
+
+async function loadRecommendations() {
+
+showLoading();
+
+
+/*
+CHECK SAVED RESULTS FIRST
+*/
+
+const saved =
+localStorage.getItem(
+"internshipRecommendations"
+);
+
+
+if (saved) {
+
+try {
+
+const data =
+JSON.parse(saved);
+
+if (
+Array.isArray(data) &&
+data.length > 0
+) {
+
+allRecommendations = data;
+
+displayRecommendations(data);
+
+return;
+
+}
+
+} catch(error) {
+
+console.log(
+"Saved data error:",
+error
+);
+
+}
+
+}
+
+
+/*
+GET USER PROFILE
+*/
+
+const savedProfile =
+localStorage.getItem(
+"userProfile"
+);
+
+
+if (!savedProfile) {
+
+showNoProfile();
+
+return;
+
+}
+
+
+try {
+
+const profile =
+JSON.parse(savedProfile);
+
+await getRecommendations(profile);
+
+}
+
+catch(error) {
+
+console.error(error);
+
+showError();
+
+}
+
+}
+
+
+
+/* =========================================
+   CALL FLASK / RENDER
+========================================= */
+
+async function getRecommendations(profile) {
+
+
+try {
+
+
+const requestData = {
+
+skills:
+profile.skills || "",
+
+field:
+profile.field || "",
+
+location:
+profile.preferredLocation ||
+profile.location ||
+"",
+
+education:
+profile.education || "",
+
+interests:
+profile.interests || ""
+
+};
+
+
+console.log(
+"SENDING TO BACKEND:",
+requestData
+);
+
+
+const response =
+await fetch(
+API_URL,
+{
+
+method: "POST",
+
+headers: {
+
+"Content-Type":
+"application/json"
+
+},
+
+body:
+JSON.stringify(
+requestData
+)
+
+});
+
+
+console.log(
+"BACKEND STATUS:",
+response.status
+);
+
+
+if (!response.ok) {
+
+throw new Error(
+"Backend error: " +
+response.status
+);
+
+}
+
+
+const recommendations =
+await response.json();
+
+
+console.log(
+"RECOMMENDATIONS:",
+recommendations
+);
+
+
+if (!Array.isArray(recommendations)) {
+
+throw new Error(
+"Backend did not return an array"
+);
+
+}
+
+
+/*
+SAVE RESULTS
+*/
+
+localStorage.setItem(
+"internshipRecommendations",
+JSON.stringify(
+recommendations
+)
+);
+
+
+allRecommendations =
+recommendations;
+
+
+displayRecommendations(
+recommendations
+);
+
+
+}
+
+catch(error) {
+
+console.error(
+"API ERROR:",
+error
+);
+
+showError();
+
+}
+
+}
+
+
+
+/* =========================================
+   DISPLAY RESULTS
+========================================= */
+
+function displayRecommendations(
+recommendations
+) {
+
+
+hideMessages();
+
+grid.innerHTML = "";
+
+
+if (
+!recommendations ||
+recommendations.length === 0
+) {
+
+grid.innerHTML = `
+
+<div class="empty-state">
+
+<h3>
+No matching internships found.
+</h3>
+
+<p>
+Try adding more skills or interests
+to your profile.
+</p>
+
+<a
+href="profile.html"
+class="retry-btn">
+
+Update Profile
+
+</a>
+
+</div>
+
+`;
+
+resultsCount.textContent = "0";
+
+return;
+
+}
+
+
+/*
+RESULT COUNT
+*/
+
+resultsCount.textContent =
+recommendations.length;
+
+
+/*
+AVERAGE SCORE
+*/
+
+const totalScore =
+recommendations.reduce(
+(sum,item) =>
+sum + Number(item.score || 0),
+0
+);
+
+
+const average =
+Math.round(
+totalScore /
+recommendations.length
+);
+
+
+profileScore.textContent =
+average + "%";
+
+
+if (average >= 70) {
+
+profileStrength.textContent =
+"Strong profile";
+
+}
+
+else if (average >= 50) {
+
+profileStrength.textContent =
+"Good profile";
+
+}
+
+else {
+
+profileStrength.textContent =
+"Keep improving";
+
+}
+
+
+
+/*
+CREATE CARDS
+*/
+
+recommendations.forEach(
+function(item,index) {
+
+grid.appendChild(
+createCard(item,index)
+);
+
+});
+
+}
+
+
+
+/* =========================================
+   CREATE CARD
+========================================= */
+
+function createCard(
+item,
+index
+) {
+
+
+const card =
+document.createElement(
+"article"
+);
+
+card.className =
+"recommendation-card";
+
+
+const company =
+item.company ||
+"Company";
+
+
+const title =
+item.profile ||
+item.title ||
+"Internship";
+
+
+const location =
+item.Location ||
+item.location ||
+"Not Available";
+
+
+const duration =
+item.Duration ||
+"Not Available";
+
+
+const stipend =
+item.Stipend ||
+"Not Available";
+
+
+const score =
+Number(item.score || 0);
+
+
+const skills =
+String(
+item.Skills ||
+item.skills ||
+""
+)
+.split(",")
+.map(
+skill => skill.trim()
+)
+.filter(Boolean)
+.slice(0,4);
+
+
+const reasons =
+Array.isArray(item.reasons)
+? item.reasons
+: [];
+
+
+const initials =
+company
+.split(" ")
+.filter(Boolean)
+.slice(0,2)
+.map(
+word =>
+word.charAt(0)
+.toUpperCase()
+)
+.join("");
+
+
+const internshipId =
+item.internship_id ||
+index;
+
+
+
+card.innerHTML = `
+
+<div class="recommendation-top">
+
+<div class="company-logo">
+
+${escapeHTML(
+initials || "IM"
+)}
+
+</div>
+
+<span class="match-badge">
+
+${score}% MATCH
+
+</span>
+
+</div>
+
+
+<h3>
+
+${escapeHTML(title)}
+
+</h3>
+
+
+<p class="recommendation-company">
+
+${escapeHTML(company)}
+
+</p>
+
+
+<div class="recommendation-meta">
+
+<span>
+📍 ${escapeHTML(location)}
+</span>
+
+<span>
+⏱ ${escapeHTML(duration)}
+</span>
+
+<span>
+💰 ${escapeHTML(stipend)}
+</span>
+
+</div>
+
+
+${
+skills.length
+?
+
+`
+
+<div class="skill-section">
+
+<span>
+SKILLS
+</span>
+
+<div class="skill-tags">
+
+${skills.map(
+skill =>
+
+`
+
+<span>
+${escapeHTML(skill)}
+</span>
+
+`
+
+).join("")}
+
+</div>
+
+</div>
+
+`
+
+: ""
+
+}
+
+
+${
+reasons.length
+?
+
+`
+
+<div class="match-reasons">
+
+<span class="match-reasons-title">
+
+WHY RECOMMENDED
+
+</span>
+
+<div class="reason-list">
+
+${reasons.map(
+reason =>
+
+`
+
+<span class="reason-tag">
+
+✓ ${escapeHTML(reason)}
+
+</span>
+
+`
+
+).join("")}
+
+</div>
+
+</div>
+
+`
+
+: ""
+
+}
+
+
+<a
+href="internship-details.html?job=${encodeURIComponent(internshipId)}"
+class="recommendation-btn">
+
+View Opportunity
+
+<span>
+→
+</span>
+
+</a>
+
+`;
+
+
+return card;
+
+}
+
+
+
+/* =========================================
+   BEST MATCH
+========================================= */
+
+document
+.getElementById("bestMatchBtn")
+.addEventListener(
+"click",
+function() {
+
+setActive(this);
+
+
+const sorted =
+[...allRecommendations]
+.sort(
+(a,b) =>
+Number(b.score || 0) -
+Number(a.score || 0)
+);
+
+
+displayRecommendations(sorted);
+
+});
+
+
+
+/* =========================================
+   LATEST
+========================================= */
+
+document
+.getElementById("latestBtn")
+.addEventListener(
+"click",
+function() {
+
+setActive(this);
+
+
+const sorted =
+[...allRecommendations]
+.sort(
+(a,b) =>
+
+String(
+b["Date Time"] || ""
+)
+.localeCompare(
+String(
+a["Date Time"] || ""
+)
+)
+
+);
+
+
+displayRecommendations(sorted);
+
+});
+
+
+
+/* =========================================
+   REMOTE
+========================================= */
+
+document
+.getElementById("remoteBtn")
+.addEventListener(
+"click",
+function() {
+
+setActive(this);
+
+
+const remote =
+allRecommendations.filter(
+item => {
+
+const location =
+String(
+item.Location ||
+item.location ||
+""
+)
+.toLowerCase();
+
+
+return (
+location.includes("remote") ||
+location.includes("work from home") ||
+location.includes("work-from-home")
+);
+
+});
+
+
+displayRecommendations(remote);
+
+});
+
+
+
+/* =========================================
+   ACTIVE FILTER
+========================================= */
+
+function setActive(button) {
+
+document
+.querySelectorAll(
+".filter-btn"
+)
+.forEach(
+btn =>
+btn.classList.remove(
+"active"
+)
+);
+
+
+button.classList.add(
+"active"
+);
+
+}
+
+
+
+/* =========================================
+   LOADING
+========================================= */
+
+function showLoading() {
+
+loading.style.display =
+"block";
+
+errorMessage.style.display =
+"none";
+
+noProfileMessage.style.display =
+"none";
+
+grid.innerHTML = "";
+
+}
+
+
+
+/* =========================================
+   HIDE MESSAGES
+========================================= */
+
+function hideMessages() {
+
+loading.style.display =
+"none";
+
+errorMessage.style.display =
+"none";
+
+noProfileMessage.style.display =
+"none";
+
+}
+
+
+
+/* =========================================
+   NO PROFILE
+========================================= */
+
+function showNoProfile() {
+
+loading.style.display =
+"none";
+
+errorMessage.style.display =
+"none";
+
+noProfileMessage.style.display =
+"block";
+
+grid.innerHTML = "";
+
+}
+
+
+
+/* =========================================
+   ERROR
+========================================= */
+
+function showError() {
+
+loading.style.display =
+"none";
+
+noProfileMessage.style.display =
+"none";
+
+errorMessage.style.display =
+"block";
+
+grid.innerHTML = "";
+
+}
+
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHTML(value) {
+
+const div =
+document.createElement("div");
+
+div.textContent =
+value == null
+? ""
+: String(value);
+
+return div.innerHTML;
+
+}
+
+
+</script>
+
 </body>
+
 </html>
