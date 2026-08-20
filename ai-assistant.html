@@ -951,6 +951,8 @@
             content.className =
                 "message-content";
 
+             content.style.whiteSpace = "pre-wrap";
+
 
             content.innerHTML =
                 text +
@@ -971,94 +973,42 @@
 
 
         /* =====================================================
-           DEMO AI RESPONSE
+           AI RESPONSE
         ====================================================== */
 
-        function getDemoResponse(message) {
+        async function getAIResponse(message) {
 
-            const text =
-                message.toLowerCase();
+            const profile = {
+                skills: localStorage.getItem("skills") || "",
+                field: localStorage.getItem("field") || "",
+                location: localStorage.getItem("location") || "",
+                education: localStorage.getItem("education") || "",
+                interests: localStorage.getItem("interests") || ""
+            };
 
+            const response = await fetch(
+                "http://127.0.0.1:5001/ai-assistant",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        profile: profile
+                    })
+                }
+            );
 
-            if (
-                text.includes("python") ||
-                text.includes("sql") ||
-                text.includes("data")
-            ) {
+            const data = await response.json();
 
-                return `
-                    Based on those skills, you could explore
-                    <strong>Data Analyst</strong>,
-                    <strong>Data Science</strong> and
-                    some <strong>AI / ML</strong> internships.
-                    <br><br>
-                    Your exact recommendations can become
-                    personalized once your profile is connected
-                    to the internship database.
-                `;
-
+            if (!response.ok) {
+                throw new Error(
+                    data.error || "AI Assistant error"
+                );
             }
 
-
-            if (
-                text.includes("remote")
-            ) {
-
-                return `
-                    Remote internships can be filtered by
-                    location and field.
-                    <br><br>
-                    Try the <strong>Internships</strong> page
-                    to explore available remote opportunities.
-                `;
-
-            }
-
-
-            if (
-                text.includes("profile") ||
-                text.includes("improve")
-            ) {
-
-                return `
-                    A stronger profile should include your
-                    <strong>skills, education, interests,
-                    preferred field and location</strong>.
-                    <br><br>
-                    You can update these from
-                    <strong>My Profile</strong>.
-                `;
-
-            }
-
-
-            if (
-                text.includes("skill") ||
-                text.includes("learn")
-            ) {
-
-                return `
-                    Start with skills that match your target
-                    field. For example, Python + SQL + data
-                    analysis can be useful for data-related
-                    internships.
-                    <br><br>
-                    Your profile will eventually help us
-                    personalize these suggestions.
-                `;
-
-            }
-
-
-            return `
-                I can help you with internships, skills,
-                career direction and profile improvement.
-                <br><br>
-                Try asking:
-                <strong>"Which internship is best for my
-                skills?"</strong>
-            `;
-
+            return data.answer;
         }
 
 
@@ -1068,54 +1018,55 @@
 
         chatForm.addEventListener(
             "submit",
-            function (event) {
+            async function (event) {
 
                 event.preventDefault();
-
 
                 const message =
                     chatInput.value.trim();
 
-
                 if (!message) {
                     return;
                 }
-
 
                 addMessage(
                     message,
                     "user"
                 );
 
-
                 chatInput.value = "";
 
-
-                typingIndicator.style.display =
-                    "block";
-
+                typingIndicator.style.display = "block";
 
                 chatMessages.scrollTop =
                     chatMessages.scrollHeight;
 
-
-                setTimeout(function () {
-
-                    typingIndicator.style.display =
-                        "none";
-
+                try {
 
                     const response =
-                        getDemoResponse(message);
-
+                        await getAIResponse(message);
 
                     addMessage(
                         response,
                         "bot"
                     );
 
-                }, 700);
+                } catch (error) {
 
+                    addMessage(
+                        "Sorry, I couldn't connect to the AI Assistant right now. Please make sure the Flask backend is running.",
+                        "bot"
+                    );
+
+                    console.error(error);
+
+                } finally {
+
+                    typingIndicator.style.display = "none";
+
+                    chatMessages.scrollTop =
+                        chatMessages.scrollHeight;
+                }
             }
         );
 

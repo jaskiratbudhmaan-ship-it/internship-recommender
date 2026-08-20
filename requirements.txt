@@ -3,3 +3,5 @@ Flask
 flask-cors
 pandas
 gunicorn
+python-dotenv
+google-genai

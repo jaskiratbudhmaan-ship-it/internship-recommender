@@ -993,6 +993,14 @@
 
             event.preventDefault();
 
+            // Keep the existing UI unchanged while making the saved
+            // profile available to the AI Assistant.
+            localStorage.setItem("skills", document.getElementById("skills").value);
+            localStorage.setItem("field", document.getElementById("field").value);
+            localStorage.setItem("location", document.getElementById("location").value);
+            localStorage.setItem("education", document.getElementById("degree").value + " " + document.getElementById("educationLevel").value);
+            localStorage.setItem("interests", document.getElementById("interests").value);
+
             saveMessage.style.display = "block";
 
             setTimeout(function () {
