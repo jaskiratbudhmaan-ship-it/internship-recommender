@@ -7,8 +7,7 @@ InternMatch is a web-based internship discovery and recommendation platform desi
 The platform provides students with a simple way to create their profile, explore internship opportunities, search and filter results, and receive profile-based internship recommendations.
 
 ---
-
-## Problem Statement
+## PROBLEM
 
 Students often struggle to find internship opportunities that match their individual skills, interests, education, and preferred location.
 
